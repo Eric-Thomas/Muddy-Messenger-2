@@ -1,0 +1,15 @@
+.form-container {
+    display: flex; 
+    flex-direction: row;
+    padding-top: 50px;
+}
+.form-group {
+     display: flex; 
+     flex-direction: row;
+}
+input {
+    float: left;
+}
+button {
+    float: right;
+}
