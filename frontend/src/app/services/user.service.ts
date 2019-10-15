@@ -12,4 +12,8 @@ export class UserService {
   createUser(name: string) {
     this.userName = name;
   }
+
+  getUserName() {
+    return this.userName;
+  }
 }
