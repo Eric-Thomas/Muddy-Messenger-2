@@ -5,8 +5,11 @@
         Encryption method
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something excblse here</a>
+        <p (click)="setEncryptionOption($event.target.innerText)">Triple DES</p>
+        <p (click)="setEncryptionOption($event.target.innerText)">AES</p>
+        <p (click)="setEncryptionOption($event.target.innerText)">RSA</p>
+        <p (click)="setEncryptionOption($event.target.innerText)">Two Fish</p>
     </div>
 </div>
+
+{{encryption}}

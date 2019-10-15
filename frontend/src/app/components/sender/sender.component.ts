@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class SenderComponent implements OnInit {
 
   private userName = '';
+  private encryption = '';
   constructor(private userService: UserService,
     private router: Router) { }
 
@@ -18,6 +19,10 @@ export class SenderComponent implements OnInit {
     if (!this.userName) {
       this.router.navigateByUrl('');
     }
+  }
+
+  setEncryptionOption(option: string){
+    this.encryption = option;
   }
 
 }
