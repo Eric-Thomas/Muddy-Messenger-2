@@ -9,6 +9,8 @@
 }
 input {
     float: left;
+    border: 2px solid #1976d2;
+    border-radius: 4px;
 }
 button {
     float: right;

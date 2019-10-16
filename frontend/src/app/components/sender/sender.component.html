@@ -12,4 +12,20 @@
     </div>
 </div>
 
-{{encryption}}
+<p *ngIf="encryption">Chosen method: {{encryption}}</p>
+
+<div class="form-group">
+        <label for="message">What message do you want to Muddy up?</label>
+        <textarea class="form-control rounded-0" id="message" rows="10"></textarea>
+        <button type="submit" class="btn btn-outline-primary" (click)="sendMessage()">Submit</button>
+</div>
+
+<div class="error-message" *ngIf="encryptionError">
+    <p style="color: red">Please select an encryption method</p>
+    <p style="color: red">We want a safe message :)</p>
+</div>
+
+<div class="success-message" *ngIf="successMessage">
+    <p style="color: green">{{successMessage}}</p>
+</div>
+      

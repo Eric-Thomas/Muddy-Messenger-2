@@ -11,6 +11,9 @@ export class SenderComponent implements OnInit {
 
   private userName = '';
   private encryption = '';
+  private submit = false;
+  private encryptionError = false;
+  private successMessage = '';
   constructor(private userService: UserService,
     private router: Router) { }
 
@@ -23,6 +26,17 @@ export class SenderComponent implements OnInit {
 
   setEncryptionOption(option: string){
     this.encryption = option;
+    this.encryptionError = false;
+  }
+
+  sendMessage(){
+    //TODO: Send message with api service and use httpinterceptor to encrypt
+    if (!this.encryption){
+      this.encryptionError = true;
+    } else {
+      document.getElementById('message').value = '';
+      this.successMessage = 'Message sent';
+    }
   }
 
 }
