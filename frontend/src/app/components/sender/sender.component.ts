@@ -34,7 +34,7 @@ export class SenderComponent implements OnInit {
     if (!this.encryption){
       this.encryptionError = true;
     } else {
-      document.getElementById('message').value = '';
+      (<HTMLTextAreaElement>document.getElementById('message')).value = '';
       this.successMessage = 'Message sent';
     }
   }
