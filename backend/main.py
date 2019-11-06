@@ -16,6 +16,7 @@ def add_user():
     user_name = request.get_json().get('user_name')
     if user_name != None:
         try:
+            #TODO: Sanitize DB inputs
             user = User(user_name)
             db_session.add(user)
             db_session.commit()
