@@ -15,3 +15,14 @@ input {
 button {
     float: right;
 }
+
+.login-clean form {
+    max-width: 400px;
+    width: 90%;
+    margin: 50px auto;
+    background-color: #ffffffbb;
+    padding: 50px;
+    border-radius: 4px;
+    color:#454d55;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+}

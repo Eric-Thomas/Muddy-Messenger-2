@@ -1,4 +1,4 @@
-<div class="form-container">
+<!-- <div class="form-container">
     <form>
         <div>
             <label>Username</label>
@@ -8,4 +8,21 @@
             <button type="submit" class="btn btn-outline-primary" (click)="createUser()">Submit</button>
         </div>
     </form>
-</div>
+</div> -->
+
+<div class="login-clean">
+        <form method="post"style="padding-top: 50px">
+            <h2 class="text-center"style="margin-bottom: 20px">Log In</h2>
+            <div class="illustration">
+                <i class="icon ion-ios-navigate"></i></div>
+            <div class="form-group">
+                <input class="form-control" type="email" [(ngModel)]="userName"name="username" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" name="password" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block" type="submit"(click)="createUser()">Log In</button>
+            </div>
+        </form>
+    </div>

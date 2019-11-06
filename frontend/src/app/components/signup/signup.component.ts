@@ -3,13 +3,13 @@ import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.css']
 })
-export class LoginComponent implements OnInit {
+export class SignupComponent implements OnInit {
 
-  private userName = '';
+  private userName ='';
   constructor(private userService: UserService,
     private router: Router) { }
 
@@ -21,5 +21,4 @@ export class LoginComponent implements OnInit {
     this.userService.createUser(this.userName);
     this.router.navigateByUrl('/inbox'); 
   }
-
 }
