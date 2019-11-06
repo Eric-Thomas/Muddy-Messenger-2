@@ -10,6 +10,8 @@ import { SenderComponent } from './components/sender/sender.component';
 import { HomeComponent } from './components/home/home.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { InboxComponent } from './components/inbox/inbox.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AppConstants } from './app.constants';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { InboxComponent } from './components/inbox/inbox.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

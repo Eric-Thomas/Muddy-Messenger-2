@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-signup',
@@ -11,14 +12,16 @@ export class SignupComponent implements OnInit {
 
   private userName ='';
   constructor(private userService: UserService,
-    private router: Router) { }
+    private apiServiece :ApiService,
+    private router: Router,) { }
 
   ngOnInit() {
+
   }
 
   createUser() {
-    //TODO: Use API service to see if user alread exists if not create one
+    this.apiServiece.createUser(this.userName);
     this.userService.createUser(this.userName);
-    this.router.navigateByUrl('/inbox'); 
+    // this.router.navigateByUrl('/inbox'); 
   }
 }
