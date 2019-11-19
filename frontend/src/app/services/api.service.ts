@@ -15,11 +15,8 @@ export class ApiService {
     };
     this.httpClient.post(url, payload).subscribe(resp => console.log(resp));
   }
-  getUsers(userName: string) {
-    let url = AppConstants.apiURL + "/user";
-    let payload = {
-      user_name: userName
-    };
-    this.httpClient.get(url, payload).subscribe(resp => console.log(resp));
+  getUsers() {
+    let url = AppConstants.apiURL + "/users";
+    return this.httpClient.get(url);
   }
 }
