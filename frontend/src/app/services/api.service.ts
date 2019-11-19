@@ -16,5 +16,4 @@ export class ApiService {
     }
     this.httpClient.post(url, payload).subscribe(resp => console.log(resp));
   }
-
 }
