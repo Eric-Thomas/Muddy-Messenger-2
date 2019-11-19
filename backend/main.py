@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/user', methods=['POST', 'GET'])
+@app.route('/user', methods=['POST'])
 def user():
     request_user_name = request.get_json().get('user_name')
     if not request_user_name:  # check that username isn't emtpy
@@ -30,12 +30,18 @@ def user():
 
 
 @app.route('/user/<user_name>')
-def user_name():
-    like_name = "%{}%".format(username)
+def user_name(user_name):
+    like_name = "%{}%".format(user_name)
     query = User.query.filter(User.user_name.like(like_name)).all()
     if not query:  # No users match in db
         return jsonify({'status': 404, 'message':  str(user_name) + ' does not exist'})
     return jsonify({'status': 200, 'users': [row.user_name for row in query]})
+
+
+@app.route('/users')
+def users():
+    all_users = User.query.all()
+    return jsonify({'status': 200, 'users': [user.user_name for user in all_users]})
 
 
 if __name__ == '__main__':
