@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
@@ -10,27 +10,32 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
+  registerForm: FormGroup;
+  submitted = false;
 
-  private userName ='';
-  private password ='';
-  private loginForm;
   constructor(private userService: UserService,
     private apiServiece :ApiService,
-    private router: Router,) { }
+    private router: Router,private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.loginForm = new FormGroup({
-      'username' : new FormControl(this.userName,
-        [Validators.required]),
-      'password' : new FormControl(this.password,
-        [Validators.required,
-        Validators.minLength(7)])
+    this.registerForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  createUser() {
-    this.apiServiece.createUser(this.userName);
-    this.userService.createUser(this.userName);
-    // this.router.navigateByUrl('/inbox'); 
+  // convenience getter for easy access to form fields
+  get f() { return this.registerForm.controls }
+
+  onSubmit() {
+    this.submitted = true;
+    //stop here if form is invalid
+    if (this.registerForm.invalid) {
+      return;
+    }
+
+    this.apiServiece.createUser(this.f.username.value);
+    this.userService.createUser(this.f.username.value);
+    this.router.navigateByUrl('/inbox'); 
   }
 }

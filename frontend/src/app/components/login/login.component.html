@@ -1,28 +1,25 @@
-<!-- <div class="form-container">
-    <form>
-        <div>
+<div class="login-clean">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" method="post"style="padding-top: 50px">
+            <h2 class="text-center"style="margin-bottom: 20px">Log In</h2>
+        <div class="illustration">
+            <i class="icon ion-ios-navigate"></i></div>
+        <div class="form-group">
             <label>Username</label>
+            <input type="username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                <div *ngIf="f.username.errors.required">Username is required</div>
+            </div>
         </div>
         <div class="form-group">
-            <input type="text" placeholder="Enter name" [(ngModel)]="userName" name="username">
-            <button type="submit" class="btn btn-outline-primary" (click)="createUser()">Submit</button>
+                <label>Password</label>
+                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary btn-block" type="submit">Log In</button>
         </div>
     </form>
-</div> -->
-
-<div class="login-clean">
-        <form method="post"style="padding-top: 50px">
-            <h2 class="text-center"style="margin-bottom: 20px">Log In</h2>
-            <div class="illustration">
-                <i class="icon ion-ios-navigate"></i></div>
-            <div class="form-group">
-                <input class="form-control" type="email" [(ngModel)]="userName"name="username" placeholder="Username" required>
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="Password" required>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit"(click)="createUser()">Log In</button>
-            </div>
-        </form>
-    </div>
+</div>
+    
