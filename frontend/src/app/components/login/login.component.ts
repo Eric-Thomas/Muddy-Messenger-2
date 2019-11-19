@@ -3,6 +3,8 @@ import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -13,8 +15,9 @@ export class LoginComponent implements OnInit {
   submitted = false;
 
   constructor(private userService: UserService,
-    private apiServiece :ApiService,
-    private router: Router,private formBuilder: FormBuilder) { }
+    private apiService :ApiService,
+    private router: Router,private formBuilder: FormBuilder,
+    private alertService: AlertService) { }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -28,6 +31,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.alertService.clear();
     //stop here if form is invalid
     if (this.registerForm.invalid) {
       return;
@@ -35,6 +39,16 @@ export class LoginComponent implements OnInit {
 
     //this.apiServiece.createUser(this.f.username.value);
     this.userService.createUser(this.f.username.value);
-    this.router.navigateByUrl('/inbox'); 
+    //this.router.navigateByUrl('/inbox'); 
+    this.apiService.login(this.f.username.value, this.f.password.value)
+      .pipe(first())
+      .subscribe(
+        data => {
+          this.router.navigateByUrl('/inbox'); 
+        },
+        error => {
+          this.alertService.error(error);
+        });
+
   }
 }
