@@ -1,19 +1,25 @@
-import { Injectable } from '@angular/core';
-import { AppConstants } from '../app.constants';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from "@angular/core";
+import { AppConstants } from "../app.constants";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ApiService {
+  constructor(private httpClient: HttpClient) {}
 
-  constructor(private httpClient: HttpClient) { }
-
-  createUser(userName: string){
+  createUser(userName: string) {
     let url = AppConstants.apiURL + "/user";
     let payload = {
-      "user_name": userName
-    }
+      user_name: userName
+    };
     this.httpClient.post(url, payload).subscribe(resp => console.log(resp));
+  }
+  getUsers(userName: string) {
+    let url = AppConstants.apiURL + "/user";
+    let payload = {
+      user_name: userName
+    };
+    this.httpClient.get(url, payload).subscribe(resp => console.log(resp));
   }
 }

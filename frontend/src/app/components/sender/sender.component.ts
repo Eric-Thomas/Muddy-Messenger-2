@@ -9,13 +9,15 @@ import { Router } from "@angular/router";
 })
 export class SenderComponent implements OnInit {
   private userName = "";
+  private users = ["Eric", "Duddy", "Mikey"];
   constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
     this.userName = this.userService.getUserName();
-    if (!this.userName) {
-      this.router.navigateByUrl("");
-    }
+    this.users;
+    // if (!this.userName) {
+    //   this.router.navigateByUrl("");
+    // }
   }
 
   sendMessage() {
