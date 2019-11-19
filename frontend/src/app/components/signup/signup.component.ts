@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +16,8 @@ export class SignupComponent implements OnInit {
 
   constructor(private userService: UserService,
     private apiServiece :ApiService,
-    private router: Router,private formBuilder: FormBuilder) { }
+    private router: Router,private formBuilder: FormBuilder,
+    private alertService: AlertService) { }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -29,6 +31,7 @@ export class SignupComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.alertService.clear();
     //stop here if form is invalid
     if (this.registerForm.invalid) {
       return;
