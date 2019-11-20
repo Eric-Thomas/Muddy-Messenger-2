@@ -47,6 +47,14 @@ def userAuthenticate():
 
     return jsonify({'status': 200})
 
+@app.route('/authenticate', methods = ['POST', 'GET'])
+def userAuthenticate():
+    request_user_name = request.get_json().get('user_name')
+    request_password = request.get_json().get('password')
+    print(request_user_name + ' ' + request_password)
+
+    return jsonify({'status': 200})
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
