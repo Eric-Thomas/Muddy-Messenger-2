@@ -38,6 +38,14 @@ def user():
             return jsonify({'status': 404, 'message':  str(request_user_name) + ' does not exist'})
         return jsonify({'status': 200, 'users': [row.user_name for row in q]})
 
+@app.route('/authenticate', methods = ['POST', 'GET'])
+def userAuthenticate():
+    request_user_name = request.get_json().get('user_name')
+    request_password = request.get_json().get('password')
+    print(request_user_name + ' ' + request_password)
+
+    return jsonify({'status': 200})
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
