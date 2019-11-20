@@ -14,13 +14,14 @@ CORS(app)
 @app.route('/user', methods=['POST', 'GET'])
 def user():
     request_user_name = request.get_json().get('user_name')
-    if request_user_name == None: # check that username isn't emtpy
-        return jsonify({'status': 400, 'message': 'Invalid request syntax. Send JSON of form {user_name: XXX}'})
+    request_password = request.get_json().get('password')
+    if request_user_name == None or request_password: # check that username isn't emtpy
+        return jsonify({'status': 400, 'message': 'Invalid request syntax. Send JSON of form {user_name: XXX, password: XXX}'})
     
     if request.method == 'POST': # Add user to db
         try:
             #TODO: Sanitize DB inputs
-            user = User(request_user_name)
+            user = User(request_user_name, request_password)
             db_session.add(user)
             db_session.commit()
             # Successful write to database
