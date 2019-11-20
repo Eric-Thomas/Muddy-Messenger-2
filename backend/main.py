@@ -39,7 +39,7 @@ def user_name(user_name):
     for row in query:
         user = {'name': row.user_name, 'public_key': row.public_key}
         users.append(value)
-    return jsonify({'status': 200, 'users': resp})
+    return jsonify({'status': 200, 'users': users})
 
 
 @app.route('/users')
