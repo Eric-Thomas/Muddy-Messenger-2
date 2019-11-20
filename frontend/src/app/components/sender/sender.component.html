@@ -1,4 +1,6 @@
-<h1>Hello {{ userName }}</h1>
+<div class="heading">
+  <h1>Hello {{ userName }}</h1>
+</div>
 
 <div class="form-group">
   <form>
@@ -14,7 +16,11 @@
   </form>
 </div>
 
-<div class="error-message" *ngIf="encryptionError">
-  <p style="color: red">Please select an encryption method</p>
-  <p style="color: red">We want a safe message :)</p>
+<div class="recipient">
+  <label
+    >Choose your message recipient <input list="browsers" name="myBrowser"
+  /></label>
+  <datalist id="browsers">
+    <option *ngFor="let user of users" value="{{ user }}"></option>
+  </datalist>
 </div>
