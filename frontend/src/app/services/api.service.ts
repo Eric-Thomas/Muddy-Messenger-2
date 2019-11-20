@@ -7,10 +7,12 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ApiService {
+  passwordHash;
+  constructor(private httpClient: HttpClient) {
+     this.passwordHash = require('password-hash');
+   }
 
-  constructor(private httpClient: HttpClient) { }
-
-  login(username : string, password : string){
+  login(username : String, password : String){
     let url = AppConstants.apiURL + "/authenticate";
     let payload = {
       "user_name": username,
@@ -26,14 +28,20 @@ export class ApiService {
         return user;
       }));
   }
-  register(username : String, password: String){
-    
-  }
-  createUser(userName: string){
+
+  createUser(username: String, password: String){
     let url = AppConstants.apiURL + "/user";
     let payload = {
-      "user_name": userName
+      "user_name": username,
+      "password": this.passwordHash.generate(password)
     }
-    this.httpClient.post(url, payload).subscribe(resp => console.log(resp));
+    return this.httpClient.post(url, payload)
+    .pipe(map(user => {
+      // store user details and jwt token in local storage to keep user logged in between page refreshes
+      // localStorage.setItem('currentUser', JSON.stringify(user));
+      // this.currentUserSubject.next(user);
+      console.log(user);
+      return user;
+    }));
   }
 }
