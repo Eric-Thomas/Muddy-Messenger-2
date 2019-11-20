@@ -35,7 +35,11 @@ def user_name(user_name):
     query = User.query.filter(User.user_name.like(like_name)).all()
     if not query:  # No users match in db
         return jsonify({'status': 404, 'message':  str(user_name) + ' does not exist'})
-    return jsonify({'status': 200, 'users': [row.user_name for row in query]})
+    resp = []
+    for row in query:
+        value = {'name': row.user_name, 'public_key': row.public_key}
+        resp.append(value)
+    return jsonify({'status': 200, 'users': resp})
 
 
 @app.route('/users')
