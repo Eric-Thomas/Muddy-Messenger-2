@@ -34,7 +34,7 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    this.apiServiece.createUser(this.f.username.value);
+    this.apiServiece.createUser(this.f.username.value, this.f.password.value);
     this.userService.createUser(this.f.username.value);
     this.router.navigateByUrl('/inbox'); 
   }
