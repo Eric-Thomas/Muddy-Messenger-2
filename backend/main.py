@@ -38,6 +38,23 @@ def user():
             return jsonify({'status': 404, 'message':  str(request_user_name) + ' does not exist'})
         return jsonify({'status': 200, 'users': [row.user_name for row in q]})
 
+@app.route('/send', methods=['POST'])
+def send():
+    request_sender = request.get_json().get('sender')
+    request_receiver = request.get_json().get('receiver')
+    request_message = request.get_json().get('message')
+
+    try:
+        message = Message(request_receiver, request_sender, request_message)
+        db_session.add(message)
+        db_session.commit()
+        return jsonify({'status': 201, 'message': 'Message Muddied!'})
+    except exc.IntegrityError as e:
+        db_session.rollback()
+        return jsonify({'status': 400, 'message': 'Message sending failed. Sad!'})
+
+@app.route('/inbox', methods=['POST'])
+def receive():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

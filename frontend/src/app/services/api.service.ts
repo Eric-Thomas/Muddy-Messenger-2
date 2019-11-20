@@ -16,4 +16,17 @@ export class ApiService {
     }
     this.httpClient.post(url, payload).subscribe(resp => console.log(resp));
   }
+
+  sendMessage(sender: string, receiver: string, message: string){
+    let url = AppConstants.apiURL + "/send";
+    let payload ={
+      "sender": sender,
+      "receiver": receiver,
+      "message": message
+    };
+    this.httpClient.post(url, payload).subscribe();
+  }
+
+  receiveMessages(receiver: string){
+  }
 }
