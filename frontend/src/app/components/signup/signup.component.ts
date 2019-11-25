@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +16,7 @@ export class SignupComponent implements OnInit {
   submitted = false;
 
   constructor(private userService: UserService,
-    private apiServiece :ApiService,
+    private apiService :ApiService,
     private router: Router,private formBuilder: FormBuilder,
     private alertService: AlertService) { }
 
@@ -37,8 +38,16 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    this.apiServiece.createUser(this.f.username.value, this.f.password.value);
-    this.userService.createUser(this.f.username.value);
-    this.router.navigateByUrl('/inbox'); 
+    // this.apiService.createUser(this.f.username.value, this.f.password.value)
+    //   .pipe(first())
+    //   .subscribe(
+    //     data => {
+    //       this.userService.createUser(this.f.username.value);
+    //       this.router.navigateByUrl('/inbox'); 
+    //     },
+    //     error => {
+    //       this.alertService.error(error);
+    //     }
+    //   );
   }
 }

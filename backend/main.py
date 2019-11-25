@@ -48,7 +48,7 @@ def users():
     return jsonify({'status': 200, 'users': [user.user_name for user in all_users]})
 
 @app.route('/authenticate', methods = ['POST', 'GET'])
-def userAuthenticate():
+def authenticate():
     request_user_name = request.get_json().get('user_name')
     request_password = request.get_json().get('password')
     print(request_user_name + ' ' + request_password)

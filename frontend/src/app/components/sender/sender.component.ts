@@ -22,9 +22,9 @@ export class SenderComponent implements OnInit {
     // if (!this.userName) {
     //   this.router.navigateByUrl("");
     // }
-    this.apiService.getUsers().subscribe(resp => {
-      this.users = resp["users"];
-    });
+    // this.apiService.getUsers().subscribe(resp => {
+    //   this.users = resp["users"];
+    // });
   }
 
   sendMessage() {
