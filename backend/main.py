@@ -48,5 +48,17 @@ def users():
     all_users = User.query.all()
     return jsonify({'status': 200, 'users': [user.user_name for user in all_users]})
 
+   
+@app.route('/authenticate/<username>')
+def authenticate(username):
+    query = db_session.query(User).filter_by(user_name = username)
+    if not query:  # No users match in db
+        return jsonify({'status': 404, 'message':  str(user_name) + ' does not exist'})
+    user = query.first() #get first or only object that is user
+    return jsonify({'status': 200, 'user_name': user.user_name, 'password': user.password, 'public_key': user.public_key})
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+
+

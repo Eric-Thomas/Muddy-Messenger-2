@@ -13,7 +13,7 @@ export class ApiService {
    }
 
   login(username : String, password : String){
-    let url = AppConstants.apiURL + "/user/" + username;
+    let url = AppConstants.apiURL + "/authenticate/" + username;
     return this.httpClient.get(url).pipe(map(resp => {
       console.log("db pass" + resp["password"])
       if (resp["status"] == 200 && resp["password"] == password){//successful login
@@ -41,5 +41,5 @@ export class ApiService {
 
   error(message) {
     return throwError(message);
-}
+  }
 }
