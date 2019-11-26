@@ -1,5 +1,6 @@
-from sqlalchemy import Column, String, ForeignKey, Integer
+from sqlalchemy import Column, String, ForeignKey, Integer, DateTime
 from database import Base
+import datetime
 
 class User(Base):
 
@@ -22,3 +23,4 @@ class Message(Base):
     receiver = Column(String(50), ForeignKey("users.user_name"), nullable = False)
     sender = Column(String(50), ForeignKey("users.user_name"), nullable = False)
     message = Column(String, nullable = False)
+    time = Column(DateTime, default=datetime.datetime.utcnow)
