@@ -65,11 +65,19 @@ def send():
     except:
         return jsonify({'status': 400, 'message': 'Write to db failed'})
 
-@app.route('/inbox', methods=['GET'])
-def receive():
-    request_user_name = request.get_json().get('user_name')
-    if not request_user_name:  # check that username isn't emtpy
-        return jsonify({'status': 400, 'message': 'Invalid request syntax. Send JSON of form {user_name: XXX}'})
+@app.route('/user/<user_name>/inbox', methods=['GET'])
+def receive(user_name):
+    try:
+        query = Message.query.filter(Message.receiver == user_name).all()
+        messages = []
+        for row in query:
+            message = {'sent by': row.sender, 'text': row.message}
+            messages.append(message)
+        return jsonify({'status': 200, 'messages': messages})
+    except Exception as e:
+        print(e)
+        return jsonify({'status': 400})
+    
 
 
 
