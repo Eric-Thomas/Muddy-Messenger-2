@@ -15,11 +15,12 @@ CORS(app)
 @app.route('/user', methods=['POST'])
 def user():
     request_user_name = request.get_json().get('user_name')
+    request_password = request.get_json().get('password')
     if not request_user_name:  # check that username isn't emtpy
         return jsonify({'status': 400, 'message': 'Invalid request syntax. Send JSON of form {user_name: XXX}'})
     try:
         # TODO: Sanitize DB inputs
-        user = User(request_user_name)
+        user = User(request_user_name, request_password)
         db_session.add(user)
         db_session.commit()
         # Successful write to database
@@ -37,8 +38,8 @@ def user_name(user_name):
         return jsonify({'status': 404, 'message':  str(user_name) + ' does not exist'})
     users = []
     for row in query:
-        user = {'name': row.user_name, 'public_key': row.public_key}
-        users.append(value)
+        user = {'name': row.user_name, 'password': row.password, 'public_key': row.public_key}
+        users.append(user)
     return jsonify({'status': 200, 'users': users})
 
 
@@ -46,14 +47,6 @@ def user_name(user_name):
 def users():
     all_users = User.query.all()
     return jsonify({'status': 200, 'users': [user.user_name for user in all_users]})
-
-@app.route('/authenticate', methods = ['POST', 'GET'])
-def authenticate():
-    request_user_name = request.get_json().get('user_name')
-    request_password = request.get_json().get('password')
-    print(request_user_name + ' ' + request_password)
-
-    return jsonify({'status': 200})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

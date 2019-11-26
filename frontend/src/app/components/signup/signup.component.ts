@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signup',
@@ -37,17 +37,23 @@ export class SignupComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     }
-
-    // this.apiService.createUser(this.f.username.value, this.f.password.value)
-    //   .pipe(first())
-    //   .subscribe(
-    //     data => {
-    //       this.userService.createUser(this.f.username.value);
-    //       this.router.navigateByUrl('/inbox'); 
-    //     },
-    //     error => {
-    //       this.alertService.error(error);
-    //     }
-    //   );
+    
+    // this.apiService.createUser(this.f.username.value, this.f.password.value).subscribe(
+    //   x => console.log(x),
+    //   err => console.log("ERROR")
+    // );
+    this.apiService.createUser(this.f.username.value, this.f.password.value)
+      .pipe(first())
+      .subscribe(
+        data => {
+          if(data["status"] == 201) {
+            this.userService.createUser(this.f.username.value);
+            this.router.navigateByUrl('/inbox'); 
+          }
+        },
+        err => {
+          this.alertService.error(err);
+        }
+      );
   }
 }
