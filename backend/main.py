@@ -53,8 +53,9 @@ def send():
         db_session.rollback()
         return jsonify({'status': 400, 'message': 'Message sending failed. Sad!'})
 
-@app.route('/inbox', methods=['POST'])
-def receive():
+# @app.route('/inbox', methods=['GET'])
+# def receive():
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
