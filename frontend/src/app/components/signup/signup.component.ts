@@ -14,6 +14,7 @@ import { first, map } from 'rxjs/operators';
 export class SignupComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
+  usernameTaken = false;
 
   constructor(private userService: UserService,
     private apiService :ApiService,
@@ -37,6 +38,7 @@ export class SignupComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     }
+    this.usernameTaken = false;
     
     // this.apiService.createUser(this.f.username.value, this.f.password.value).subscribe(
     //   x => console.log(x),
@@ -50,6 +52,7 @@ export class SignupComponent implements OnInit {
             this.userService.createUser(this.f.username.value);
             this.router.navigateByUrl('/inbox'); 
           }
+          this.usernameTaken = true;
         },
         err => {
           this.alertService.error(err);

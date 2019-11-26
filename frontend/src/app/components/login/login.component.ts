@@ -13,6 +13,7 @@ import { first } from 'rxjs/operators';
 export class LoginComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
+  invalidLogin = false;
 
   constructor(private userService: UserService,
     private apiService :ApiService,
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     }
+    this.invalidLogin = false;
 
     //this.apiServiece.createUser(this.f.username.value);
     this.userService.createUser(this.f.username.value);
@@ -48,6 +50,7 @@ export class LoginComponent implements OnInit {
           if(data["status"] == 200){
             this.router.navigateByUrl('/inbox'); 
           }
+          this.invalidLogin = true;
         },
         error => {
           this.alertService.error(error);
