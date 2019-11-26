@@ -1,5 +1,5 @@
 import database
-from models import User
+from models import User, Message
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy import exc
@@ -54,16 +54,24 @@ def send():
     request_message = request.get_json().get('message')
 
     try:
-        message = Message(request_receiver, request_sender, request_message)
+        message = Message(receiver = request_receiver, sender = request_sender, message = request_message)
         db_session.add(message)
         db_session.commit()
         return jsonify({'status': 201, 'message': 'Message Muddied!'})
     except exc.IntegrityError as e:
+        print(e)
         db_session.rollback()
-        return jsonify({'status': 400, 'message': 'Message sending failed. Sad!'})
+        return jsonify({'status': 400, 'message': 'Foreign Key constraint failed. Make sure both users exist'})
+    except:
+        return jsonify({'status': 400, 'message': 'Write to db failed'})
 
-# @app.route('/inbox', methods=['GET'])
-# def receive():
+@app.route('/inbox', methods=['GET'])
+def receive():
+    request_user_name = request.get_json().get('user_name')
+    if not request_user_name:  # check that username isn't emtpy
+        return jsonify({'status': 400, 'message': 'Invalid request syntax. Send JSON of form {user_name: XXX}'})
+
+
 
 
 if __name__ == '__main__':
