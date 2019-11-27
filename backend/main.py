@@ -72,7 +72,8 @@ def receive(user_name):
         query = Message.query.filter(Message.receiver == user_name).all()
         messages = []
         for row in query:
-            message = {'sent by': row.sender, 'text': row.message, 'time' : row.time}
+            time = str(row.time).split()[0]
+            message = {'sender': row.sender, 'text': row.message, 'time' : time}
             messages.append(message)
         return jsonify({'status': 200, 'messages': messages})
     except Exception as e:

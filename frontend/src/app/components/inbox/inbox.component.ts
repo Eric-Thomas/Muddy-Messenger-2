@@ -19,9 +19,9 @@ export class InboxComponent implements OnInit {
 
   ngOnInit() {
     this.userName = this.userService.getUserName();
-    // if (!this.userName) {
-    //   this.router.navigateByUrl('');
-    // }
+    if (!this.userName) {
+      this.router.navigateByUrl('');
+    }
     this.getMessages();
   }
 
