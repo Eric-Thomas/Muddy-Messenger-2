@@ -29,4 +29,8 @@ export class ApiService {
     let url = AppConstants.apiURL + "/users";
     return this.httpClient.get(url);
   }
+  getMessages(receiver: string){
+    let url = AppConstants.apiURL + "/user/" + receiver + "/messages";
+    return this.httpClient.get(url);
+  }
 }
