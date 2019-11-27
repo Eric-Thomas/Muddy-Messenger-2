@@ -31,7 +31,6 @@ export class InboxComponent implements OnInit {
 
   getMessages(){
     this.apiService.getMessages(this.userName).subscribe(resp => {
-      console.log(resp);
       this.messages = resp["messages"];
     })
   }
