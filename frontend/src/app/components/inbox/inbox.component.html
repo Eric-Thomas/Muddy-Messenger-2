@@ -18,7 +18,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let message of messages">
-              <th scope="row">1</th>
+              <td>{{message.time}}</td>
               <td>{{message.sender}}</td>
               <td>{{message.text}}</td>
             </tr>
@@ -27,4 +27,6 @@
       
       </div>
 </div>
+
+<button class="btn btn-primary btn-block" (click)="getMessages()">Refresh</button>
 
