@@ -6,3 +6,7 @@
 .table-wrapper-scroll-y {
     display: block;
 }
+
+th.date {
+    width: 100px;
+}
