@@ -10,7 +10,7 @@ import { ApiService } from "src/app/services/api.service";
 })
 export class SenderComponent implements OnInit {
   private userName = "";
-  private users = ["Eric", "Duddy", "Mikey"];
+  private users: any;
   constructor(
     private userService: UserService,
     private router: Router,
@@ -19,10 +19,12 @@ export class SenderComponent implements OnInit {
 
   ngOnInit() {
     this.userName = this.userService.getUserName();
-    // if (!this.userName) {
-    //   this.router.navigateByUrl("");
-    // }
+    if (!this.userName) {
+      this.router.navigateByUrl("");
+    }
     this.apiService.getUsers().subscribe(resp => {
+      console.log('users');
+      console.log(resp["users"]);
       this.users = resp["users"];
     });
   }

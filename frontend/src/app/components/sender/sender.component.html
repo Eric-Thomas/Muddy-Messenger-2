@@ -18,9 +18,9 @@
 
 <div class="recipient">
   <label
-    >Choose your message recipient <input list="browsers" name="myBrowser"
+    >Choose your message recipient <input list="users" name="users"
   /></label>
-  <datalist id="browsers">
+  <datalist id="users">
     <option *ngFor="let user of users" value="{{ user }}"></option>
   </datalist>
 </div>

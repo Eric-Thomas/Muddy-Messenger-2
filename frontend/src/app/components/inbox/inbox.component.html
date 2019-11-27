@@ -11,41 +11,16 @@
         <table class="table table-bordered table-striped mb-0">
           <thead>
             <tr>
-              <th class="date"scope="col">Date & Time</th>
+              <th class="date"scope="col">Date</th>
               <th scope="col">From</th>
               <th scope="col">Message</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let message of messages">
               <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-            </tr>
-            <tr>
-              <th scope="row">4</th>
-              <td>Mark</td>
-              <td>Otto</td>
-            </tr>
-            <tr>
-              <th scope="row">5</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-            </tr>
-            <tr>
-              <th scope="row">6</th>
-              <td>Larry</td>
-              <td>the Bird</td>
+              <td>{{message.sender}}</td>
+              <td>{{message.text}}</td>
             </tr>
           </tbody>
         </table>
@@ -53,8 +28,3 @@
       </div>
 </div>
 
-<div>
-    <ul>
-        <li *ngFor="let message of messages">Message: {{message.text}} {{message.time}} {{message.sender}}</li>
-    </ul>
-</div>
