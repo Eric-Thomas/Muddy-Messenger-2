@@ -66,13 +66,13 @@ def send():
         print(e)
         return jsonify({'status': 400, 'message': 'Write to db failed'})
 
-@app.route('/user/<user_name>/inbox', methods=['GET'])
+@app.route('/user/<user_name>/messages', methods=['GET'])
 def receive(user_name):
     try:
         query = Message.query.filter(Message.receiver == user_name).all()
         messages = []
         for row in query:
-            message = {'sent by': row.sender, 'text': row.message}
+            message = {'sent by': row.sender, 'text': row.message, 'time' : row.time}
             messages.append(message)
         return jsonify({'status': 200, 'messages': messages})
     except Exception as e:
