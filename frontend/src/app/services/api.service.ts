@@ -3,13 +3,14 @@ import { AppConstants } from '../app.constants';
 import { HttpClient } from '@angular/common/http';
 import {throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  passwordHash;
+  
+
   constructor(private httpClient: HttpClient) {
-     //this.passwordHash = require('password-hash');
    }
 
   login(username : String, password : String){
