@@ -18,9 +18,10 @@
 
 <div class="recipient">
   <label
-    >Choose your message recipient <input list="users" name="users"
+    >Choose your message recipient <input list="users" name="users" [(ngModel)]='selected' (change)="selectRecipient(selected)"
   /></label>
   <datalist id="users">
     <option *ngFor="let user of users" value="{{ user }}"></option>
   </datalist>
 </div>
+

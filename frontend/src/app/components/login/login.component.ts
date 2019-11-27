@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
         data => {
           console.log(data)
           if(data["status"] == 200){
+            this.userService.createUser(this.f.username.value);
             this.router.navigateByUrl('/inbox'); 
           }
           this.invalidLogin = true;

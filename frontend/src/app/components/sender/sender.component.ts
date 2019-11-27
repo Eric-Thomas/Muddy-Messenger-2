@@ -11,6 +11,7 @@ import { ApiService } from "src/app/services/api.service";
 export class SenderComponent implements OnInit {
   private userName = "";
   private users: any;
+  private recipeint: string = "";
   constructor(
     private userService: UserService,
     private router: Router,
@@ -29,7 +30,14 @@ export class SenderComponent implements OnInit {
     });
   }
 
+  selectRecipient(name) {
+    this.recipeint = name;
+}
+
   sendMessage() {
     //TODO: Encrypt and send to backend
+    var message = (<HTMLInputElement>document.getElementById("message")).value;
+    this.apiService.sendMessage(this.userName, this.recipeint, message);
   }
+
 }
