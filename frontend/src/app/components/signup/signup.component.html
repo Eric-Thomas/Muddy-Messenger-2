@@ -21,5 +21,6 @@
         <div class="form-group">
             <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
         </div>
+        <div *ngIf= "usernameTaken" style="color: #dc3545;">This username must be taken</div>
     </form>
 </div>

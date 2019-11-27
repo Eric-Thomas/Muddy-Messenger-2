@@ -12,6 +12,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { InboxComponent } from './components/inbox/inbox.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AppConstants } from './app.constants';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AppConstants } from './app.constants';
     HomeComponent,
     SignupComponent,
     InboxComponent,
+    AlertComponent,
   ],
   imports: [
     BrowserModule,
