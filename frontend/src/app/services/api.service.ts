@@ -26,7 +26,6 @@ export class ApiService {
   }
 
   createUser(username: String, password: String){
-    
     let url = AppConstants.apiURL + "/user";
     let payload = {
       "user_name": username,
