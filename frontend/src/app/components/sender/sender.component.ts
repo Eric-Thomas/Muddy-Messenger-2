@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { UserService } from "src/app/services/user.service";
 import { Router } from "@angular/router";
 import { ApiService } from "src/app/services/api.service";
+import { EncryptionService } from 'src/app/services/encryption.service'; 
 
 @Component({
   selector: "app-sender",
@@ -14,7 +15,8 @@ export class SenderComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private _EncryptionService: EncryptionService
   ) {}
 
   ngOnInit() {
@@ -29,5 +31,7 @@ export class SenderComponent implements OnInit {
 
   sendMessage() {
     //TODO: Encrypt and send to backend
+    let encryptedText = this._EncryptionService.AESEncrypt("Hello World");
+    let decryptedText = this._EncryptionService.AESDecrypt(encryptedText);
   }
 }
