@@ -12,6 +12,9 @@ export class SenderComponent implements OnInit {
   private userName = "";
   private users: any;
   private recipeint: string = "";
+  algorithms : string[] = ['RSA', 'AES', 'DES', '3DES'];
+  private chosenAlgorithm : string = "";
+
   constructor(
     private userService: UserService,
     private router: Router,
@@ -32,7 +35,11 @@ export class SenderComponent implements OnInit {
 
   selectRecipient(name) {
     this.recipeint = name;
-}
+  }
+
+  selectAlgorithm(algorithm){
+    this.chosenAlgorithm = algorithm;
+  }
 
   sendMessage() {
     //TODO: Encrypt and send to backend

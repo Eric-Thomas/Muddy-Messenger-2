@@ -12,7 +12,7 @@ import { first, map } from 'rxjs/operators';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-  registerForm: FormGroup;
+  private registerForm: FormGroup;
   submitted = false;
   usernameTaken = false;
 
