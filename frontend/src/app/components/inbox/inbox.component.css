@@ -1,0 +1,26 @@
+.my-custom-scrollbar {
+    position: relative;
+    height: 400px;
+    overflow: auto;
+ }
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+th.date {
+    width: 100px;
+}
+
+.container{
+    margin-top: 20px;
+    border-radius: 10px;
+    color:#454d55;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);  
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.send-message{
+    margin-top: 5px;
+}
+

@@ -1,5 +1,5 @@
 import database
-from models import User
+from models import User, Message
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy import exc
@@ -47,6 +47,39 @@ def user_name(user_name):
 def users():
     all_users = User.query.all()
     return jsonify({'status': 200, 'users': [user.user_name for user in all_users]})
+
+@app.route('/send', methods=['POST'])
+def send():
+    request_sender = request.get_json().get('sender')
+    request_receiver = request.get_json().get('receiver')
+    request_message = request.get_json().get('message')
+
+    try:
+        message = Message(receiver = request_receiver, sender = request_sender, message = request_message)
+        db_session.add(message)
+        db_session.commit()
+        return jsonify({'status': 201, 'message': 'Message Muddied!'})
+    except exc.IntegrityError as e:
+        print(e)
+        db_session.rollback()
+        return jsonify({'status': 400, 'message': 'Foreign Key constraint failed. Make sure both users exist'})
+    except Exception as e:
+        print(e)
+        return jsonify({'status': 400, 'message': 'Write to db failed'})
+
+@app.route('/user/<user_name>/messages', methods=['GET'])
+def receive(user_name):
+    try:
+        query = Message.query.filter(Message.receiver == user_name).all()
+        messages = []
+        for row in query:
+            time = str(row.time).split()[0]
+            message = {'sender': row.sender, 'text': row.message, 'time' : time}
+            messages.append(message)
+        return jsonify({'status': 200, 'messages': messages})
+    except Exception as e:
+        print(e)
+        return jsonify({'status': 400})
 
    
 @app.route('/authenticate/<username>')

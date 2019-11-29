@@ -41,7 +41,44 @@ export class ApiService {
     }));
   }
 
-  error(message : String) {
+  sendMessage(sender: string, receiver: string, message: string, algorithm : string){
+    switch(algorithm){
+      case 'RSA': {
+        break;
+      }
+      case 'AES': {
+        break;
+      }
+      case 'DES': {
+        break;
+      }
+      case '3DES': {
+        break;
+      }
+      default : {
+        //TODO: Return error
+        break;
+      }
+    }
+    let url = AppConstants.apiURL + "/send";
+    let payload ={
+      "sender": sender,
+      "receiver": receiver,
+      "message": message
+    };
+    this.httpClient.post(url, payload).subscribe();
+  }
+  getUsers() {
+    let url = AppConstants.apiURL + "/users";
+    return this.httpClient.get(url);
+
+  }
+  getMessages(receiver: string){
+    let url = AppConstants.apiURL + "/user/" + receiver + "/messages";
+    return this.httpClient.get(url);
+  }
+  
+  error(message: string){
     return throwError(message);
   }
 
