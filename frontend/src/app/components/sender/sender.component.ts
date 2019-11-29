@@ -52,8 +52,7 @@ export class SenderComponent implements OnInit {
   sendMessage() {
     //TODO: Encrypt and send to backend
     this.submitted = true;
-    var message = (<HTMLInputElement>document.getElementById("message")).value;
-    this.apiService.sendMessage(this.userName, this.recipient, message);
+    this.apiService.sendMessage(this.userName, this.recipient, this.f.message.value, this.chosenAlgorithm);
   }
 
   // convenience getter for easy access to form fields

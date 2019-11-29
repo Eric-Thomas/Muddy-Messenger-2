@@ -7,15 +7,12 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ApiService {
-  passwordHash;
   constructor(private httpClient: HttpClient) {
-     //this.passwordHash = require('password-hash');
    }
 
   login(username : String, password : String){
     let url = AppConstants.apiURL + "/authenticate/" + username;
     return this.httpClient.get(url).pipe(map(resp => {
-      console.log("db pass" + resp["password"])
       if (resp["status"] == 200 && resp["password"] == password){//successful login
         return resp;
       }
@@ -39,7 +36,25 @@ export class ApiService {
     }));
   }
 
-  sendMessage(sender: string, receiver: string, message: string){
+  sendMessage(sender: string, receiver: string, message: string, algorithm : string){
+    switch(algorithm){
+      case 'RSA': {
+        break;
+      }
+      case 'AES': {
+        break;
+      }
+      case 'DES': {
+        break;
+      }
+      case '3DES': {
+        break;
+      }
+      default : {
+        //TODO: Return error
+        break;
+      }
+    }
     let url = AppConstants.apiURL + "/send";
     let payload ={
       "sender": sender,
