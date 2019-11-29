@@ -38,14 +38,12 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.invalidLogin = false;
-
-    this.userService.createUser(this.f.username.value);
-    this.apiService.login(this.f.username.value, this.f.password.value)
+    this.apiService.login(this.f.username.value.toLowerCase(), this.f.password.value)
       .pipe(first())
       .subscribe(
         data => {
           if(data["status"] == 200){
-            this.userService.createUser(this.f.username.value);
+            this.userService.createUser(this.f.username.value.toLowerCase());
             this.router.navigateByUrl('/inbox'); 
           }
           this.invalidLogin = true;
