@@ -17,7 +17,6 @@ export class ApiService {
   login(username : String, password : String){
     let url = AppConstants.apiURL + "/authenticate/" + username;
     return this.httpClient.get(url).pipe(map(resp => {
-      console.log("db pass" + resp["password"])
       if (resp["status"] == 200 && resp["password"] == this.hash(password, username)){//successful login
         return resp;
       }
@@ -33,7 +32,6 @@ export class ApiService {
     }
     return this.httpClient.post(url, payload)
     .pipe(map(resp => {
-      console.log(resp)
       if (resp["status"] == 201){//successful signup
         return resp;
       }
@@ -42,29 +40,12 @@ export class ApiService {
   }
 
   sendMessage(sender: string, receiver: string, message: string, algorithm : string){
-    switch(algorithm){
-      case 'RSA': {
-        break;
-      }
-      case 'AES': {
-        break;
-      }
-      case 'DES': {
-        break;
-      }
-      case '3DES': {
-        break;
-      }
-      default : {
-        //TODO: Return error
-        break;
-      }
-    }
+    let encryptedMessage = this.encryptMessage(message, algorithm);
     let url = AppConstants.apiURL + "/send";
     let payload ={
       "sender": sender,
       "receiver": receiver,
-      "message": message
+      "message": encryptedMessage
     };
     this.httpClient.post(url, payload).subscribe();
   }
@@ -84,5 +65,29 @@ export class ApiService {
 
   hash(plaintext : any, salt: any) {
     return cryptojs.MD5(plaintext + salt).toString();
+  }
+
+  encryptMessage(plaintext: any, algorithm : string) {
+    //TODO: Produce key from user input
+    let key = "key";
+    switch(algorithm){
+      case 'RSA': {
+        //TODO: Implement RSA Encryption
+        return plaintext;
+      }
+      case 'AES': {
+        return cryptojs.AES.encrypt(plaintext, key).toString();
+      }
+      case 'DES': {
+        return cryptojs.DES.encrypt(plaintext, key).toString();
+      }
+      case '3DES': {
+        return cryptojs.TripleDES.encrypt(plaintext, key).toString();
+      }
+      default : {
+        //TODO: Return error
+        break;
+      }
+    }
   }
 }

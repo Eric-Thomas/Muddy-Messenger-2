@@ -12,9 +12,7 @@ import { FormGroup, FormBuilder , Validators} from '@angular/forms';
 export class SenderComponent implements OnInit {
   private userName = "";
   private users: any;
-  private recipient: string = "";
   private algorithms : string[] = ['RSA', 'AES', 'DES', '3DES'];
-  private chosenAlgorithm : string = "";
   private messageForm : FormGroup;
   private submitted = false;
 
@@ -31,31 +29,20 @@ export class SenderComponent implements OnInit {
       this.router.navigateByUrl("");
     }
     this.apiService.getUsers().subscribe(resp => {
-      console.log('users');
-      console.log(resp["users"]);
       this.users = resp["users"];
     });
     this.messageForm = this.formBuilder.group({
       message: ['', Validators.required],
-      recipient: ['', [Validators.required]]
+      recipient: ['', [Validators.required]],
+      algorithm : ['RSA']
     });
   }
 
-  selectRecipient(name) {
-    this.recipient = name;
-  }
-
-  selectAlgorithm(algorithm){
-    this.chosenAlgorithm = algorithm;
-  }
-
   sendMessage() {
-    //TODO: Encrypt and send to backend
     this.submitted = true;
-    this.apiService.sendMessage(this.userName, this.recipient, this.f.message.value, this.chosenAlgorithm);
+    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value);
   }
 
   // convenience getter for easy access to form fields
   get f() { return this.messageForm.controls }
-
 }

@@ -13,7 +13,7 @@
     <div class="d-flex flex-row">
       <div class="flex-fill">
         <label>Message recipient
-          <input class = "form-control" formControlName="recipient" list="users" name="users" [(ngModel)]='selected' (change)="selectRecipient(selected)" [ngClass]="{ 'is-invalid': submitted && f.recipient.errors }"/>
+          <input class = "form-control" formControlName="recipient" list="users" name="users" (change)="selectRecipient(selected)" [ngClass]="{ 'is-invalid': submitted && f.recipient.errors }"/>
           <div *ngIf="submitted && f.recipient.errors" class="invalid-feedback">
               <div *ngIf="f.recipient.errors.required">A recipient is required</div>
           </div>
@@ -24,8 +24,8 @@
       </div>
       <div class="flex-fill">
         <label>Encryption algorithm </label>
-        <select>
-          <option *ngFor="let algorithm of algorithms" value="{{ chosenAlgorithm }}">
+        <select class = "form-control" formControlName = "algorithm">
+          <option  *ngFor="let algorithm of algorithms" value="{{ algorithm }}">
             {{algorithm}}
           </option>
         </select>
