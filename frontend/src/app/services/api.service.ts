@@ -39,6 +39,19 @@ export class ApiService {
     }));
   }
 
+  dhKeyExchange(publicKey: Number, g: Number, n: Number, username: String) {
+    let url = AppConstants.apiURL + '/dhExchange'; 
+    let payload = {
+      "g": g, 
+      "n": n, 
+      "client_public_key": publicKey,
+      // TODO: fix undefined username issue
+      "username" : 'nick',
+    };
+
+    return this.httpClient.post(url, payload)
+  }
+
   error(message) {
     return throwError(message);
   }

@@ -3,6 +3,7 @@ from models import User
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy import exc
+import random
 
 
 database.init_db()
@@ -56,6 +57,34 @@ def authenticate(username):
         return jsonify({'status': 404, 'message':  str(username) + ' does not exist'})
     user = query[0]
     return jsonify({'status': 200, 'user_name': user.user_name, 'password': user.password, 'public_key': user.public_key})
+
+# Does DH Key Exchange with client
+@app.route('/dhExchange', methods=['POST'])
+def dh_exchange():
+
+    # Get payload
+    g = request.get_json().get('g')
+    n = request.get_json().get('n')
+    client_public_key = request.get_json().get('client_public_key')
+    username = request.get_json().get('username')
+
+    print('g: ' + str(g))
+    print('n: ' + str(n))
+    print('client public: ' + str(client_public_key))
+
+    # query user 
+    query = User.query.filter_by(user_name = username).all()
+    if not query:  # No users match in db
+        return jsonify({'status': 404, 'message':  str(username) + ' does not exist'})
+    user = query[0]
+
+    server_private_key = random.randint(0, 10)  # TODO: too large overflows
+    shared_secret = client_public_key**server_private_key % n # TODO: store shared secret somewhere
+
+    B = g**server_private_key % n
+
+    print('private key: '+ str(server_private_key) +'\nshared secret: '+ str(shared_secret) +'\nserver public key: ' + str(B))
+    return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': B})
 
 
 if __name__ == '__main__':

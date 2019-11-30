@@ -27,6 +27,8 @@ export class SenderComponent implements OnInit {
     // this.apiService.getUsers().subscribe(resp => {
     //   this.users = resp["users"];
     // });
+    // TODO: userName isn't defined
+    this._EncryptionService.dhKeyExchange(this.userName);
   }
 
   sendMessage() {
