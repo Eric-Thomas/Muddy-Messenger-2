@@ -3,6 +3,7 @@ import { UserService } from "src/app/services/user.service";
 import { Router } from "@angular/router";
 import { ApiService } from "src/app/services/api.service";
 import { FormGroup, FormBuilder , Validators} from '@angular/forms';
+import { EncryptionService } from 'src/app/services/encryption.service'; 
 
 @Component({
   selector: "app-sender",
@@ -20,7 +21,8 @@ export class SenderComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private apiService: ApiService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private _EncryptionService: EncryptionService
   ) {}
 
   ngOnInit() {
@@ -36,6 +38,9 @@ export class SenderComponent implements OnInit {
       recipient: ['', [Validators.required]],
       algorithm : ['RSA']
     });
+
+    // Gets shared private key with server
+    this._EncryptionService.dhKeyExchange(this.userName);
   }
 
   sendMessage() {
