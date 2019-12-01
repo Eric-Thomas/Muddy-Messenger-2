@@ -3,6 +3,7 @@ import { UserService } from "src/app/services/user.service";
 import { Router } from "@angular/router";
 import { ApiService } from "src/app/services/api.service";
 import { FormGroup, FormBuilder , Validators} from '@angular/forms';
+import { EncryptionService } from 'src/app/services/encryption.service'; 
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -22,6 +23,7 @@ export class SenderComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private formBuilder: FormBuilder,
+    private _EncryptionService: EncryptionService,
     private modalService: NgbModal
   ) {}
 
@@ -39,6 +41,9 @@ export class SenderComponent implements OnInit {
       sharedKey: ['', [Validators.required]],
       algorithm : ['RSA']
     });
+
+    // Gets shared private key with server
+    this._EncryptionService.dhKeyExchange(this.userName);
   }
 
   sendMessage() {
