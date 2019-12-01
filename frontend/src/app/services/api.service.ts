@@ -39,8 +39,8 @@ export class ApiService {
     }));
   }
 
-  sendMessage(sender: string, receiver: string, message: string, algorithm : string){
-    let encryptedMessage = this.encryptMessage(message, algorithm);
+  sendMessage(sender: string, receiver: string, message: string, algorithm : string, sharedKey: string){
+    let encryptedMessage = this.encryptMessage(message, algorithm, sharedKey);
     let url = AppConstants.apiURL + "/send";
     let payload ={
       "sender": sender,
@@ -79,22 +79,43 @@ export class ApiService {
     return cryptojs.MD5(plaintext + salt).toString();
   }
 
-  encryptMessage(plaintext: any, algorithm : string) {
-    //TODO: Produce key from user input
-    let key = "key";
+  encryptMessage(plaintext: any, algorithm : string, sharedKey : string) {
     switch(algorithm){
       case 'RSA': {
         //TODO: Implement RSA Encryption
         return plaintext;
       }
       case 'AES': {
-        return cryptojs.AES.encrypt(plaintext, key).toString();
+        return cryptojs.AES.encrypt(plaintext, sharedKey).toString();
       }
       case 'DES': {
-        return cryptojs.DES.encrypt(plaintext, key).toString();
+        return cryptojs.DES.encrypt(plaintext, sharedKey).toString();
       }
       case '3DES': {
-        return cryptojs.TripleDES.encrypt(plaintext, key).toString();
+        return cryptojs.TripleDES.encrypt(plaintext, sharedKey).toString();
+      }
+      default : {
+        //TODO: Return error
+        break;
+      }
+    }
+  }
+
+  decryptMessage(plaintext: any, algorithm : string, sharedKey : string) {
+    //TODO: Produce key from user input
+    switch(algorithm){
+      case 'RSA': {
+        //TODO: Implement RSA Decryption
+        return plaintext;
+      }
+      case 'AES': {
+        return cryptojs.AES.decrypt(plaintext, sharedKey).toString();
+      }
+      case 'DES': {
+        return cryptojs.DES.decrypt(plaintext, sharedKey).toString();
+      }
+      case '3DES': {
+        return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString();
       }
       default : {
         //TODO: Return error
