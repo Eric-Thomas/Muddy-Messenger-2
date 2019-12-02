@@ -79,7 +79,7 @@ export class ApiService {
     return cryptojs.MD5(plaintext + salt).toString();
   }
 
-  encryptMessage(plaintext: any, algorithm : string, sharedKey : string) {
+  encryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
     switch(algorithm){
       case 'RSA': {
         //TODO: Implement RSA Encryption
@@ -101,7 +101,7 @@ export class ApiService {
     }
   }
 
-  decryptMessage(plaintext: any, algorithm : string, sharedKey : string) {
+  decryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
     //TODO: Produce key from user input
     switch(algorithm){
       case 'RSA': {

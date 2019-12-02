@@ -24,3 +24,4 @@ class Message(Base):
     sender = Column(String(50), ForeignKey("users.user_name"), nullable = False)
     message = Column(String, nullable = False)
     time = Column(DateTime, default=datetime.datetime.utcnow)
+    encryption = Column(String(50), nullable = False)
