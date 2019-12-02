@@ -51,12 +51,12 @@ def users():
 
 @app.route('/send', methods=['POST'])
 def send():
-    request_sender = request.get_json().get('sender')
-    request_receiver = request.get_json().get('receiver')
-    request_message = request.get_json().get('message')
-
     try:
-        message = Message(receiver = request_receiver, sender = request_sender, message = request_message)
+        request_sender = request.get_json().get('sender')
+        request_receiver = request.get_json().get('receiver')
+        request_message = request.get_json().get('message')
+        encryption_type = request.get_json().get('encryption')
+        message = Message(receiver = request_receiver, sender = request_sender, message = request_message, encryption = encryption_type)
         db_session.add(message)
         db_session.commit()
         return jsonify({'status': 201, 'message': 'Message Muddied!'})

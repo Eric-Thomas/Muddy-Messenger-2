@@ -45,7 +45,8 @@ export class ApiService {
     let payload ={
       "sender": sender,
       "receiver": receiver,
-      "message": encryptedMessage
+      "message": encryptedMessage,
+      "encryption" : algorithm
     };
     this.httpClient.post(url, payload).subscribe();
   }
