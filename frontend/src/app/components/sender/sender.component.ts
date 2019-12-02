@@ -19,6 +19,7 @@ export class SenderComponent implements OnInit {
   private messageForm : FormGroup;
   private submitted = false;
   private successfulSend = false;
+  private invalidRecipient = false;
   private closeResult: string;
   private encryptedMessage : string;
 
@@ -57,7 +58,11 @@ export class SenderComponent implements OnInit {
         if(data["status"] == 201){
           this.encryptedMessage = data["encryptedMessage"];
           this.successfulSend = true;
+          this.invalidRecipient = false;
           this.clearTextFields();
+        }
+        else if(data["status"]== 403){
+          this.invalidRecipient = true;
         }
       },
       error => {
@@ -74,6 +79,8 @@ export class SenderComponent implements OnInit {
   clearTextFields(){
     (<HTMLInputElement>document.getElementById("message")).value = "";
     (<HTMLInputElement>document.getElementById("recipient")).value = "";
-    (<HTMLInputElement>document.getElementById("sharedKey")).value = "";
+    if((<HTMLInputElement>document.getElementById("sharedKey")) != null){
+      (<HTMLInputElement>document.getElementById("sharedKey")).value = "";
+    }
   }
 }

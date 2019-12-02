@@ -5,7 +5,7 @@
         <label for="message">What message do you want to Muddy up?</label>
     </div>
     <div class="col text-right">
-      <button class="btn btn-muddy inbox" type="button">Inbox</button>
+      <button class="btn btn-muddy inbox" (click) = "goToInbox()"type="button">Inbox</button>
     </div>
   </div>
   
@@ -21,7 +21,10 @@
         <label>Message recipient
           <input class = "form-control" id="recipient" formControlName="recipient" list="users" name="users" [ngClass]="{ 'is-invalid': submitted && f.recipient.errors }"/>
           <div *ngIf="submitted && f.recipient.errors" class="invalid-feedback">
-              <div *ngIf="f.recipient.errors.required">A recipient is required</div>
+            <div *ngIf="f.recipient.errors.required">A recipient is required</div>
+          </div>
+          <div *ngIf="invalidRecipient" class="alert alert-danger" role="alert">
+            Recipient not found
           </div>
         </label>
         <datalist id="users">
@@ -30,7 +33,7 @@
       </div>
       <div class="flex-fill">
         <label>Encryption algorithm </label>
-        <select class = "form-control" formControlName = "algorithm">
+        <select id="algorithm" class = "form-control" formControlName = "algorithm">
           <option  *ngFor="let algorithm of algorithms" value="{{ algorithm }}">
             {{algorithm}}
           </option>
@@ -49,7 +52,7 @@
       type="submit"
       class="btn btn-muddy btn-block"
     >
-    <span *ngIf = "!this.f.errors && submitted && !successfulSend" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span *ngIf = "!invalidRecipient && !f.errors && submitted && !successfulSend" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     Send
     </button> 
     <div *ngIf = "successfulSend" class="alert alert-success" role="alert">
