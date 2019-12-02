@@ -13,6 +13,8 @@ import { InboxComponent } from './components/inbox/inbox.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AppConstants } from './app.constants';
 import { AlertComponent } from './components/alert/alert.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { SenderModalComponent } from './components/sender-modal/sender-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,13 +26,15 @@ import { AlertComponent } from './components/alert/alert.component';
     SignupComponent,
     InboxComponent,
     AlertComponent,
+    SenderModalComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

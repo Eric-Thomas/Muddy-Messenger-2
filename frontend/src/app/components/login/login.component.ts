@@ -11,9 +11,9 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  registerForm: FormGroup;
-  submitted = false;
-  invalidLogin = false;
+  private registerForm: FormGroup;
+  private submitted = false;
+  private invalidLogin = false;
 
   constructor(private userService: UserService,
     private apiService :ApiService,
@@ -38,17 +38,12 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.invalidLogin = false;
-
-    //this.apiServiece.createUser(this.f.username.value);
-    this.userService.createUser(this.f.username.value);
-    //this.router.navigateByUrl('/inbox'); 
-    this.apiService.login(this.f.username.value, this.f.password.value)
+    this.apiService.login(this.f.username.value.toLowerCase(), this.f.password.value)
       .pipe(first())
       .subscribe(
         data => {
-          console.log(data)
           if(data["status"] == 200){
-            this.userService.createUser(this.f.username.value);
+            this.userService.createUser(this.f.username.value.toLowerCase());
             this.router.navigateByUrl('/inbox'); 
           }
           this.invalidLogin = true;

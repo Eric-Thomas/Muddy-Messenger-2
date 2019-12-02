@@ -12,7 +12,7 @@ import { first, map } from 'rxjs/operators';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-  registerForm: FormGroup;
+  private registerForm: FormGroup;
   submitted = false;
   usernameTaken = false;
 
@@ -44,12 +44,12 @@ export class SignupComponent implements OnInit {
     //   x => console.log(x),
     //   err => console.log("ERROR")
     // );
-    this.apiService.createUser(this.f.username.value, this.f.password.value)
+    this.apiService.createUser(this.f.username.value.toLowerCase(), this.f.password.value)
       .pipe(first())
       .subscribe(
         data => {
           if(data["status"] == 201) {
-            this.userService.createUser(this.f.username.value);
+            this.userService.createUser(this.f.username.value.toLowerCase());
             this.router.navigateByUrl('/inbox'); 
           }
           this.usernameTaken = true;

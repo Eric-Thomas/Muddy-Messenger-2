@@ -2,6 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { UserService } from "src/app/services/user.service";
 import { Router } from "@angular/router";
 import { ApiService } from "src/app/services/api.service";
+import { FormGroup, FormBuilder , Validators} from '@angular/forms';
+import { EncryptionService } from 'src/app/services/encryption.service'; 
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: "app-sender",
@@ -11,11 +14,17 @@ import { ApiService } from "src/app/services/api.service";
 export class SenderComponent implements OnInit {
   private userName = "";
   private users: any;
-  private recipeint: string = "";
+  private algorithms : string[] = ['RSA', 'AES', 'DES', '3DES'];
+  private messageForm : FormGroup;
+  private submitted = false;
+
   constructor(
     private userService: UserService,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private formBuilder: FormBuilder,
+    private _EncryptionService: EncryptionService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -24,20 +33,28 @@ export class SenderComponent implements OnInit {
       this.router.navigateByUrl("");
     }
     this.apiService.getUsers().subscribe(resp => {
-      console.log('users');
-      console.log(resp["users"]);
       this.users = resp["users"];
     });
-  }
+    this.messageForm = this.formBuilder.group({
+      message: ['', Validators.required],
+      recipient: ['', [Validators.required]],
+      sharedKey: ['', [Validators.required]],
+      algorithm : ['RSA']
+    });
 
-  selectRecipient(name) {
-    this.recipeint = name;
-}
+    // Gets shared private key with server
+    this._EncryptionService.dhKeyExchange(this.userName);
+  }
 
   sendMessage() {
-    //TODO: Encrypt and send to backend
-    var message = (<HTMLInputElement>document.getElementById("message")).value;
-    this.apiService.sendMessage(this.userName, this.recipeint, message);
+    this.submitted = true;
+    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value.toString());
   }
 
+  goToInbox(){
+    this.router.navigateByUrl("/inbox");
+  }
+
+  // convenience getter for easy access to form fields
+  get f() { return this.messageForm.controls }
 }

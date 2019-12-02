@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+.btn-muddy{
+    color: whitesmoke;
+    border-color: #3f2109;
+    background-color: #3f2109de;
+}
+.btn-muddy:hover{
+    color:white;
+    background-color: #3f2109;
+}
+
+.btn-muddy-secondary{
+    color: #3f2109;
+    border-color: #3f2109;
+    background-color: whitesmoke;
+}
+
+.btn-muddy-secondary:hover{
+    color: whitesmoke;
+    border-color: #3f2109;
+    background-color: #3f2109;
+}

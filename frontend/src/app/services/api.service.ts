@@ -3,20 +3,21 @@ import { AppConstants } from '../app.constants';
 import { HttpClient } from '@angular/common/http';
 import {throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
+import * as cryptojs from 'crypto-js';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  passwordHash;
+  saltRounds = 10;
+
   constructor(private httpClient: HttpClient) {
-     //this.passwordHash = require('password-hash');
    }
 
   login(username : String, password : String){
     let url = AppConstants.apiURL + "/authenticate/" + username;
     return this.httpClient.get(url).pipe(map(resp => {
-      console.log("db pass" + resp["password"])
-      if (resp["status"] == 200 && resp["password"] == password){//successful login
+      if (resp["status"] == 200 && resp["password"] == this.hash(password, username)){//successful login
         return resp;
       }
       return this.error(resp["message"]);
@@ -27,11 +28,10 @@ export class ApiService {
     let url = AppConstants.apiURL + "/user";
     let payload = {
       "user_name": username,
-      "password": password
+      "password": this.hash(password, username)
     }
     return this.httpClient.post(url, payload)
     .pipe(map(resp => {
-      console.log(resp)
       if (resp["status"] == 201){//successful signup
         return resp;
       }
@@ -39,12 +39,13 @@ export class ApiService {
     }));
   }
 
-  sendMessage(sender: string, receiver: string, message: string){
+  sendMessage(sender: string, receiver: string, message: string, algorithm : string, sharedKey: string){
+    let encryptedMessage = this.encryptMessage(message, algorithm, sharedKey);
     let url = AppConstants.apiURL + "/send";
     let payload ={
       "sender": sender,
       "receiver": receiver,
-      "message": message
+      "message": encryptedMessage
     };
     this.httpClient.post(url, payload).subscribe();
   }
@@ -58,7 +59,68 @@ export class ApiService {
     return this.httpClient.get(url);
   }
   
-  error(message: string){
+  dhKeyExchange(publicKey: Number, g: Number, n: Number, username: String) {
+    let url = AppConstants.apiURL + '/dhExchange'; 
+    let payload = {
+      "g": g, 
+      "n": n, 
+      "client_public_key": publicKey,
+      "username" : username,
+    };
+
+    return this.httpClient.post(url, payload)
+  }
+
+  error(message) {
     return throwError(message);
+  }
+
+  hash(plaintext : any, salt: any) {
+    return cryptojs.MD5(plaintext + salt).toString();
+  }
+
+  encryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
+    switch(algorithm){
+      case 'RSA': {
+        //TODO: Implement RSA Encryption
+        return plaintext;
+      }
+      case 'AES': {
+        return cryptojs.AES.encrypt(plaintext, sharedKey).toString();
+      }
+      case 'DES': {
+        return cryptojs.DES.encrypt(plaintext, sharedKey).toString();
+      }
+      case '3DES': {
+        return cryptojs.TripleDES.encrypt(plaintext, sharedKey).toString();
+      }
+      default : {
+        //TODO: Return error
+        break;
+      }
+    }
+  }
+
+  decryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
+    //TODO: Produce key from user input
+    switch(algorithm){
+      case 'RSA': {
+        //TODO: Implement RSA Decryption
+        return plaintext;
+      }
+      case 'AES': {
+        return cryptojs.AES.decrypt(plaintext, sharedKey).toString();
+      }
+      case 'DES': {
+        return cryptojs.DES.decrypt(plaintext, sharedKey).toString();
+      }
+      case '3DES': {
+        return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString();
+      }
+      default : {
+        //TODO: Return error
+        break;
+      }
+    }
   }
 }
