@@ -34,7 +34,7 @@ import { SenderModalComponent } from './components/sender-modal/sender-modal.com
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -48,7 +48,7 @@ export class SenderComponent implements OnInit {
 
   sendMessage() {
     this.submitted = true;
-    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value);
+    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value.toString());
   }
 
   goToInbox(){

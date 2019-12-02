@@ -10,7 +10,8 @@ var primes = require('primes');
 })
 export class EncryptionService {
 
-  private _secretKey = Math.floor(Math.random()*10) //TODO: too large causes overflow
+  private _secretKey = Math.floor(Math.random()*10); //TODO: too large causes overflow
+  private _secretKeyString = this._secretKey.toString();
   private _sharedSecret;
 
   constructor(
@@ -48,26 +49,26 @@ export class EncryptionService {
    * AES, DES, 3DES encrpytion and decryption
    */
   AESEncrypt(value : string) : string{
-    return CryptoJS.AES.encrypt(value, this._secretKey).toString();
+    return CryptoJS.AES.encrypt(value, this._secretKeyString).toString();
   }
 
   AESDecrypt(textToDecrypt : string){
-    return CryptoJS.AES.decrypt(textToDecrypt, this._secretKey).toString(CryptoJS.enc.Utf8);
+    return CryptoJS.AES.decrypt(textToDecrypt, this._secretKeyString).toString(CryptoJS.enc.Utf8);
   }
 
   DESEncrypt(value : string) : string{
-    return CryptoJS.DES.encrypt(value, this._secretKey).toString();
+    return CryptoJS.DES.encrypt(value, this._secretKeyString).toString();
   }
 
   DESDecrypt(textToDecrypt : string){
-    return CryptoJS.DES.decrypt(textToDecrypt, this._secretKey).toString(CryptoJS.enc.Utf8);
+    return CryptoJS.DES.decrypt(textToDecrypt, this._secretKeyString).toString(CryptoJS.enc.Utf8);
   }
 
   TDESEncrypt(value : string) : string{
-    return CryptoJS.TripleDES.encrypt(value, this._secretKey).toString();
+    return CryptoJS.TripleDES.encrypt(value, this._secretKeyString).toString();
   }
 
   TDESDecrypt(textToDecrypt : string){
-    return CryptoJS.TripleDES.decrypt(textToDecrypt, this._secretKey).toString(CryptoJS.enc.Utf8);
+    return CryptoJS.TripleDES.decrypt(textToDecrypt, this._secretKeyString).toString(CryptoJS.enc.Utf8);
   }
 }
