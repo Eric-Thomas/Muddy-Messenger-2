@@ -63,7 +63,7 @@ def send():
     except exc.IntegrityError as e:
         print(e)
         db_session.rollback()
-        return jsonify({'status': 400, 'message': 'Foreign Key constraint failed. Make sure both users exist'})
+        return jsonify({'status': 403, 'message': 'Foreign Key constraint failed. Make sure both users exist'})
     except Exception as e:
         print(e)
         return jsonify({'status': 400, 'message': 'Write to db failed'})
