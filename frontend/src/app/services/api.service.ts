@@ -101,7 +101,7 @@ export class ApiService {
     }
   }
 
-  decryptMessage(plaintext: any, algorithm : string, sharedKey : string) {
+  decryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
     //TODO: Produce key from user input
     switch(algorithm){
       case 'RSA': {
