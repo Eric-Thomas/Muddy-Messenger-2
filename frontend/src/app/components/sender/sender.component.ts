@@ -3,6 +3,8 @@ import { UserService } from "src/app/services/user.service";
 import { Router } from "@angular/router";
 import { ApiService } from "src/app/services/api.service";
 import { FormGroup, FormBuilder , Validators} from '@angular/forms';
+import { EncryptionService } from 'src/app/services/encryption.service'; 
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: "app-sender",
@@ -20,7 +22,9 @@ export class SenderComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private apiService: ApiService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private _EncryptionService: EncryptionService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -34,13 +38,21 @@ export class SenderComponent implements OnInit {
     this.messageForm = this.formBuilder.group({
       message: ['', Validators.required],
       recipient: ['', [Validators.required]],
+      sharedKey: ['', [Validators.required]],
       algorithm : ['RSA']
     });
+
+    // Gets shared private key with server
+    this._EncryptionService.dhKeyExchange(this.userName);
   }
 
   sendMessage() {
     this.submitted = true;
-    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value);
+    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value);
+  }
+
+  goToInbox(){
+    this.router.navigateByUrl("/inbox");
   }
 
   // convenience getter for easy access to form fields
