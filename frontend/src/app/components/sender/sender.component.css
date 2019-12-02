@@ -29,3 +29,7 @@ select{
 .inbox{
     margin-top: 20px;
 }
+
+.alert-success{
+    margin-top: 10px;
+}

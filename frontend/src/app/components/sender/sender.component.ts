@@ -20,14 +20,14 @@ export class SenderComponent implements OnInit {
   private submitted = false;
   private successfulSend = false;
   private closeResult: string;
+  private encryptedMessage : string;
 
   constructor(
     private userService: UserService,
     private router: Router,
     private apiService: ApiService,
     private formBuilder: FormBuilder,
-    private _EncryptionService: EncryptionService,
-    private modalService: NgbModal
+    private _EncryptionService: EncryptionService
   ) {}
 
   ngOnInit() {
@@ -55,7 +55,9 @@ export class SenderComponent implements OnInit {
     .subscribe(
       data => {
         if(data["status"] == 201){
+          this.encryptedMessage = data["encryptedMessage"];
           this.successfulSend = true;
+          this.clearTextFields();
         }
       },
       error => {
@@ -69,22 +71,9 @@ export class SenderComponent implements OnInit {
   // convenience getter for easy access to form fields
   get f() { return this.messageForm.controls }
 
-  open(content) {
-    if(this.successfulSend){
-      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-        this.closeResult = `Closed with: ${result}`;
-      }, (reason) => {
-        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
-    }
-  }
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
+  clearTextFields(){
+    (<HTMLInputElement>document.getElementById("message")).value = "";
+    (<HTMLInputElement>document.getElementById("recipient")).value = "";
+    (<HTMLInputElement>document.getElementById("sharedKey")).value = "";
   }
 }

@@ -59,7 +59,7 @@ def send():
         message = Message(receiver = request_receiver, sender = request_sender, message = request_message, encryption = encryption_type)
         db_session.add(message)
         db_session.commit()
-        return jsonify({'status': 201, 'message': 'Message Muddied!'})
+        return jsonify({'status': 201, 'message': 'Message Muddied!', 'encryptedMessage': request_message})
     except exc.IntegrityError as e:
         print(e)
         db_session.rollback()

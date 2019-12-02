@@ -9,7 +9,7 @@
     </div>
   </div>
   
-  <form [formGroup]="messageForm" (ngSubmit) = "sendMessage(); open(content)"> 
+  <form [formGroup]="messageForm" (ngSubmit) = "sendMessage()"> 
     <div class="form-group">
       <textarea class="form-control rounded-0" formControlName = "message" id="message" rows="10"[ngClass]="{ 'is-invalid': submitted && f.message.errors }"></textarea>
       <div *ngIf="submitted && f.message.errors" class="invalid-feedback">
@@ -19,7 +19,7 @@
     <div class="d-flex flex-row">
       <div class="flex-fill">
         <label>Message recipient
-          <input class = "form-control" formControlName="recipient" list="users" name="users" [ngClass]="{ 'is-invalid': submitted && f.recipient.errors }"/>
+          <input class = "form-control" id="recipient" formControlName="recipient" list="users" name="users" [ngClass]="{ 'is-invalid': submitted && f.recipient.errors }"/>
           <div *ngIf="submitted && f.recipient.errors" class="invalid-feedback">
               <div *ngIf="f.recipient.errors.required">A recipient is required</div>
           </div>
@@ -37,7 +37,7 @@
         </select>
         <div *ngIf = "this.f.algorithm.value != 'RSA'">
           <label>Shared Key
-            <input class = "form-control" formControlName="sharedKey" [ngClass]="{ 'is-invalid': submitted && f.sharedKey.errors }"/>
+            <input class = "form-control" id="sharedKey" formControlName="sharedKey" [ngClass]="{ 'is-invalid': submitted && f.sharedKey.errors }"/>
             <div *ngIf="submitted && f.sharedKey.errors" class="invalid-feedback">
                 <div *ngIf="f.sharedKey.errors.required">A shared key is required for this algorithm</div>
             </div>
@@ -49,33 +49,12 @@
       type="submit"
       class="btn btn-muddy btn-block"
     >
-      Submit
+    <span *ngIf = "!this.f.errors && submitted && !successfulSend" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Send
     </button> 
+    <div *ngIf = "successfulSend" class="alert alert-success" role="alert">
+      Message muddied up! <br>
+      Encrypted Message: {{encryptedMessage}}
+    </div>
   </form>
 </div>
-
-<ng-template #content let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <form>
-      <div class="form-group">
-        <label for="dateOfBirth">Date of birth</label>
-        <div class="input-group">
-          <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
-  </div>
-</ng-template>
-
