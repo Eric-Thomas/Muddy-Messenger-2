@@ -5,6 +5,7 @@ import { ApiService } from "src/app/services/api.service";
 import { FormGroup, FormBuilder , Validators} from '@angular/forms';
 import { EncryptionService } from 'src/app/services/encryption.service'; 
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: "app-sender",
@@ -17,6 +18,8 @@ export class SenderComponent implements OnInit {
   private algorithms : string[] = ['RSA', 'AES', 'DES', '3DES'];
   private messageForm : FormGroup;
   private submitted = false;
+  private successfulSend = false;
+  private closeResult: string;
 
   constructor(
     private userService: UserService,
@@ -48,7 +51,15 @@ export class SenderComponent implements OnInit {
 
   sendMessage() {
     this.submitted = true;
-    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value.toString());
+    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value)
+    .subscribe(
+      data => {
+        if(data["status"] == 201){
+          this.successfulSend = true;
+        }
+      },
+      error => {
+    });
   }
 
   goToInbox(){
@@ -57,4 +68,23 @@ export class SenderComponent implements OnInit {
 
   // convenience getter for easy access to form fields
   get f() { return this.messageForm.controls }
+
+  open(content) {
+    if(this.successfulSend){
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
+  }
 }

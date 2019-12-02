@@ -47,7 +47,7 @@ export class ApiService {
       "receiver": receiver,
       "message": encryptedMessage
     };
-    this.httpClient.post(url, payload).subscribe();
+    return this.httpClient.post(url, payload);
   }
   getUsers() {
     let url = AppConstants.apiURL + "/users";
