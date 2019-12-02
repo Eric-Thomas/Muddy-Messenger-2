@@ -21,6 +21,7 @@
             <td>{{message.time}}</td>
             <td>{{message.sender}}</td>
             <td>{{message.text}}</td>
+            <td> <input type="button" value="Open" (click)="openDialog(message.sender, message.text)"/></td>
           </tr>
         </tbody>
       </table>

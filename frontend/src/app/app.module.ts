@@ -15,6 +15,9 @@ import { AppConstants } from './app.constants';
 import { AlertComponent } from './components/alert/alert.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { SenderModalComponent } from './components/sender-modal/sender-modal.component';
+import { MatDialog, MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MessageDialogComponent } from './components/inbox/message.component';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -27,6 +30,7 @@ import { SenderModalComponent } from './components/sender-modal/sender-modal.com
     InboxComponent,
     AlertComponent,
     SenderModalComponent,
+    MessageDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -35,8 +39,11 @@ import { SenderModalComponent } from './components/sender-modal/sender-modal.com
     HttpClientModule,
     ReactiveFormsModule,
     NgbModule,
+    MatDialogModule,
+    BrowserAnimationsModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}],
+  bootstrap: [AppComponent],
+  entryComponents: [MessageDialogComponent]
 })
 export class AppModule { }
