@@ -27,4 +27,8 @@ export class MessageDialogComponent implements OnInit{
     close(){
         this.dialogRef.close();
     }
+
+    decrypt(){
+        //TODO:
+    }
 }
