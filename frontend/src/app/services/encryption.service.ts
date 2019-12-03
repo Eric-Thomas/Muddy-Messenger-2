@@ -71,4 +71,9 @@ export class EncryptionService {
   TDESDecrypt(textToDecrypt : string){
     return CryptoJS.TripleDES.decrypt(textToDecrypt, this._secretKeyString).toString(CryptoJS.enc.Utf8);
   }
+
+
+  GetSharedSecret(){
+    return this._sharedSecret.toString();
+  }
 }

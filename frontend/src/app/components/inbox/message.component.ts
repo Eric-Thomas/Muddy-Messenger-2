@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { ApiService } from 'src/app/services/api.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material/dialog';
+import { EncryptionService } from 'src/app/services/encryption.service';
 
 @Component({
   selector: 'app-message',
@@ -18,6 +19,7 @@ export class MessageDialogComponent implements OnInit{
     constructor(
         private dialogRef: MatDialogRef<MessageDialogComponent>,
         private apiService: ApiService,
+        private encryptionService: EncryptionService,
         @Inject(MAT_DIALOG_DATA) data) {
 
         this.message = data.message;
@@ -34,7 +36,8 @@ export class MessageDialogComponent implements OnInit{
 
     decrypt(){
         //TODO:
-        this.decryptedMessage = this.apiService.decryptMessage(this.message, this.encryption, "123456");
+        this.encryptionService.dhKeyExchange(this.sender);
+        this.decryptedMessage = this.apiService.decryptMessage(this.message, this.encryption, this.encryptionService.GetSharedSecret());
         console.log("message: " + this.message);
         console.log("sender: " + this.sender);
         console.log("encryption: " + this.encryption);

@@ -38,14 +38,14 @@
             {{algorithm}}
           </option>
         </select>
-        <div *ngIf = "this.f.algorithm.value != 'RSA'">
+        <!-- <div *ngIf = "this.f.algorithm.value != 'RSA'">
           <label>Shared Key
             <input class = "form-control" id="sharedKey" formControlName="sharedKey" [ngClass]="{ 'is-invalid': submitted && f.sharedKey.errors }"/>
             <div *ngIf="submitted && f.sharedKey.errors" class="invalid-feedback">
                 <div *ngIf="f.sharedKey.errors.required">A shared key is required for this algorithm</div>
             </div>
           </label>
-        </div>
+        </div> -->
       </div>
     </div>
     <button 

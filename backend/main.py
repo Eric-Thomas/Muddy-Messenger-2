@@ -56,6 +56,8 @@ def send():
         request_receiver = request.get_json().get('receiver')
         request_message = request.get_json().get('message')
         encryption_type = request.get_json().get('encryption')
+        #TODO: Decrypt with shared secret
+        #TODO: Encrypt with DB master key
         message = Message(receiver = request_receiver, sender = request_sender, message = request_message, encryption = encryption_type)
         db_session.add(message)
         db_session.commit()
@@ -76,6 +78,8 @@ def receive(user_name):
         for row in query:
             time = str(row.time).split()[0]
             message = {'sender': row.sender, 'text': row.message, 'time' : time, 'encryption': row.encryption}
+            #TODO: Decrypt with DB master key
+            #TODO: Encrypt with DH shared secret
             messages.append(message)
         return jsonify({'status': 200, 'messages': messages})
     except Exception as e:
@@ -112,7 +116,7 @@ def dh_exchange():
     user = query[0]
 
     server_private_key = random.randint(0, 10)  # TODO: too large overflows
-    shared_secret = client_public_key**server_private_key % n # TODO: store shared secret somewhere
+    shared_secret = client_public_key**server_private_key % n # TODO: store shared secret somewher
 
     B = g**server_private_key % n
 
