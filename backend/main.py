@@ -7,12 +7,17 @@ import random
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+import sys
+
 
 database.init_db()
 db_session = database.db_session
 
 app = Flask(__name__)
 CORS(app)
+
+message_id = 0
+shared_secrets = {}
 
 
 @app.route('/user', methods=['POST'])
@@ -122,42 +127,18 @@ def dh_exchange():
 
     B = g**server_private_key % n
 
+    #TODO: Generate message ID and save it to dictionary
+    while(message_id in shared_secret):
+        if message_id + 1 == sys.maxsize:
+            message_id = 0
+        else:
+            message_id += 1
+
+    shared_secrets[message_id] = shared_secret
+
     print('private key: '+ str(server_private_key) +'\nshared secret: '+ str(shared_secret) +'\nserver public key: ' + str(B))
-    return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': B})
+    return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': B, 'ID': message_id})
 
-# Does RSA Key Exchange with client
-# Client sends their public key. We return a newly generated public key
-@app.route('/rsa', methods=['POST'])
-def rsa_exchange():
-
-    # Get username
-    username = request.get_json().get('username')
-    print('user: ' + str(username))
-
-    # query user 
-    query = User.query.filter_by(user_name = username).all()
-    if not query:  # No users match in db
-        return jsonify({'status': 404, 'message':  str(username) + ' does not exist'})
-    user = query[0]
-
-    # Get client's public key TODO: store somewhere
-    c_key = request.get_json().get('client_public_key')
-    print(type(c_key))
-    print(c_key)
-    client_public_key = serialization.load_pem_public_key(
-        bytes(c_key, 'utf-8'),
-        backend=default_backend()
-    )
-
-    # Generate private key
-    server_private_key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=2048,
-        backend=default_backend()
-    )
-
-    # return our public key
-    return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': str(server_private_key.public_key())})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
