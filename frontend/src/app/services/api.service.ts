@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import {throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as cryptojs from 'crypto-js';
+import * as bcrypt from 'bcryptjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +16,7 @@ export class ApiService {
   login(username : String, password : String){
     let url = AppConstants.apiURL + "/authenticate/" + username;
     return this.httpClient.get(url).pipe(map(resp => {
-      if (resp["status"] == 200 && resp["password"] == this.hash(password, username)){//successful login
+      if (resp["status"] == 200 && bcrypt.compareSync(password, resp["password"])){//successful login
         return resp;
       }
       return this.error(resp["message"]);
@@ -74,7 +76,11 @@ export class ApiService {
   }
 
   hash(plaintext : any, salt: any) {
-    return cryptojs.PBKDF2(plaintext + salt).toString();  
+    let saltValue = bcrypt.genSaltSync(10);
+    console.log(bcrypt.hashSync(plaintext, saltValue));
+    return bcrypt.hashSync(plaintext, saltValue);
+
+    //return cryptojs.PBKDF2(plaintext + salt).toString();  
   }
 
   encryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
