@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import {throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as cryptojs from 'crypto-js';
+import * as forge from 'node-forge';
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +66,18 @@ export class ApiService {
     let payload = {
       "g": g, 
       "n": n, 
+      "client_public_key": publicKey,
+      "username" : username,
+    };
+
+    return this.httpClient.post(url, payload)
+  }
+
+  rsaKeyExchange(publicKey, username: String) {
+    console.log('Key: ' + publicKey)
+
+    let url = AppConstants.apiURL + '/rsa'; 
+    let payload = {
       "client_public_key": publicKey,
       "username" : username,
     };
