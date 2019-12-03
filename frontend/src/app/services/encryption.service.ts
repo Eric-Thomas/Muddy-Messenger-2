@@ -44,7 +44,7 @@ export class EncryptionService {
         // Calculate shared secret
         this._sharedSecret = Math.pow(resp["public_key"], this._secretKey) % n
         console.log('shared secret: ' + this._sharedSecret)
-        return resp;
+        return {'shared secret' :this._sharedSecret, 'ID': resp["message_id"]};
       }
       return throwError(resp["message"])
     });
@@ -85,8 +85,4 @@ export class EncryptionService {
     return this._serverRSAPublic.encrypt(plaintext);    
   }
 
-
-  GetSharedSecret(){
-    return this._sharedSecret.toString();
-  }
 }

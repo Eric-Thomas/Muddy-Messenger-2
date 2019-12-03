@@ -6,12 +6,14 @@ import { map } from 'rxjs/operators';
 import * as cryptojs from 'crypto-js';
 import * as forge from 'node-forge';
 import * as bcrypt from 'bcryptjs';
+import { EncryptionService } from './encryption.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+    private encryptionService: EncryptionService) {
    }
 
   login(username : String, password : String){
@@ -39,14 +41,16 @@ export class ApiService {
     }));
   }
 
-  sendMessage(sender: string, receiver: string, message: string, algorithm : string, sharedKey: string){
-    let encryptedMessage = this.encryptMessage(message, algorithm, sharedKey);
+  async sendMessage(sender: string, receiver: string, message: string, algorithm : string, sharedKey: string){
+    let message_info = await this.encryptionService.dhKeyExchange(sender);
+    let encryptedMessage = this.encryptMessage(message, algorithm, message_info["shared secret"]);
     let url = AppConstants.apiURL + "/send";
     let payload ={
       "sender": sender,
       "receiver": receiver,
       "message": encryptedMessage,
-      "encryption" : algorithm
+      "encryption" : algorithm,
+      "ID": message_info["ID"]
     };
     return this.httpClient.post(url, payload);
   }

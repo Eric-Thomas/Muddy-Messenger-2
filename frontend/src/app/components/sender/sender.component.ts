@@ -47,11 +47,12 @@ export class SenderComponent implements OnInit {
     });
 
     // Gets shared private key with server
-    this._EncryptionService.dhKeyExchange(this.userName);
+    // this._EncryptionService.dhKeyExchange(this.userName);
     this._EncryptionService.RSAKeyGen(this.userName);
   }
 
   sendMessage() {
+    // let shared_secret = this._EncryptionService.dhKeyExchange(this.userName);
     this.submitted = true;
     this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value)
     .subscribe(
