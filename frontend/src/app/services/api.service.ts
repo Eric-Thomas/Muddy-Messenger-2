@@ -113,14 +113,13 @@ export class ApiService {
         return plaintext;
       }
       case 'AES': {
-        return cryptojs.AES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.AES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       case 'DES': {
-        return cryptojs.DES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.DES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       case '3DES': {
-        console.log("decrypt 3DS: " + cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8));
-        return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       default : {
         //TODO: Return error
