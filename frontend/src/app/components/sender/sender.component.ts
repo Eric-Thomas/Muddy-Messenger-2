@@ -48,6 +48,7 @@ export class SenderComponent implements OnInit {
 
     // Gets shared private key with server
     this._EncryptionService.dhKeyExchange(this.userName);
+    this._EncryptionService.RSAKeyGen(this.userName);
   }
 
   sendMessage() {
