@@ -75,7 +75,7 @@ def receive(user_name):
         messages = []
         for row in query:
             time = str(row.time).split()[0]
-            message = {'sender': row.sender, 'text': row.message, 'time' : time}
+            message = {'sender': row.sender, 'text': row.message, 'time' : time, 'encryption': row.encryption}
             messages.append(message)
         return jsonify({'status': 200, 'messages': messages})
     except Exception as e:

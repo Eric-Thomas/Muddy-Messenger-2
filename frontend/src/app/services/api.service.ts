@@ -19,7 +19,7 @@ export class ApiService {
       if (resp["status"] == 200 && bcrypt.compareSync(password, resp["password"])){//successful login
         return resp;
       }
-      return this.error(resp["message"]);
+      return this.error(resp["message"]); 
     }));
   }
 
@@ -113,13 +113,13 @@ export class ApiService {
         return plaintext;
       }
       case 'AES': {
-        return cryptojs.AES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.AES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       case 'DES': {
-        return cryptojs.DES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.DES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       case '3DES': {
-        return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       default : {
         //TODO: Return error

@@ -38,7 +38,7 @@ export class InboxComponent implements OnInit {
     })
   }
 
-  openDialog(sender: string, message: string){
+  openDialog(sender: string, message: string, encryption: string){
     console.log('h');
     const dialogConfig = new MatDialogConfig();
 
@@ -47,7 +47,8 @@ export class InboxComponent implements OnInit {
 
     dialogConfig.data = {
       sender: sender,
-      message: message
+      message: message,
+      encryption: encryption
     };
 
     this.dialog.open(MessageDialogComponent, dialogConfig);
