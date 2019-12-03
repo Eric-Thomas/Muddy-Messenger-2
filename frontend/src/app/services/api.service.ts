@@ -4,13 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import {throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as cryptojs from 'crypto-js';
-
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  saltRounds = 10;
-
   constructor(private httpClient: HttpClient) {
    }
 
@@ -77,7 +74,7 @@ export class ApiService {
   }
 
   hash(plaintext : any, salt: any) {
-    return cryptojs.MD5(plaintext + salt).toString();
+    return cryptojs.PBKDF2(plaintext + salt).toString();  
   }
 
   encryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
