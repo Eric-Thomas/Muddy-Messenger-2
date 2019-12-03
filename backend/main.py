@@ -61,11 +61,11 @@ def send():
         message = Message(receiver = request_receiver, sender = request_sender, message = request_message, encryption = encryption_type)
         db_session.add(message)
         db_session.commit()
-        return jsonify({'status': 201, 'message': 'Message Muddied!'})
+        return jsonify({'status': 201, 'message': 'Message Muddied!', 'encryptedMessage': request_message})
     except exc.IntegrityError as e:
         print(e)
         db_session.rollback()
-        return jsonify({'status': 400, 'message': 'Foreign Key constraint failed. Make sure both users exist'})
+        return jsonify({'status': 403, 'message': 'Foreign Key constraint failed. Make sure both users exist'})
     except Exception as e:
         print(e)
         return jsonify({'status': 400, 'message': 'Write to db failed'})
@@ -77,7 +77,7 @@ def receive(user_name):
         messages = []
         for row in query:
             time = str(row.time).split()[0]
-            message = {'sender': row.sender, 'text': row.message, 'time' : time}
+            message = {'sender': row.sender, 'text': row.message, 'time' : time, 'encryption': row.encryption}
             messages.append(message)
         return jsonify({'status': 200, 'messages': messages})
     except Exception as e:

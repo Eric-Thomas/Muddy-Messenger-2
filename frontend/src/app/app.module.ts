@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -14,7 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppConstants } from './app.constants';
 import { AlertComponent } from './components/alert/alert.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { SenderModalComponent } from './components/sender-modal/sender-modal.component';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MessageDialogComponent } from './components/inbox/message.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -29,7 +27,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     SignupComponent,
     InboxComponent,
     AlertComponent,
-    SenderModalComponent,
     MessageDialogComponent
   ],
   imports: [

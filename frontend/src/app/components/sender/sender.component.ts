@@ -5,6 +5,7 @@ import { ApiService } from "src/app/services/api.service";
 import { FormGroup, FormBuilder , Validators} from '@angular/forms';
 import { EncryptionService } from 'src/app/services/encryption.service'; 
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: "app-sender",
@@ -17,14 +18,17 @@ export class SenderComponent implements OnInit {
   private algorithms : string[] = ['RSA', 'AES', 'DES', '3DES'];
   private messageForm : FormGroup;
   private submitted = false;
+  private successfulSend = false;
+  private invalidRecipient = false;
+  private closeResult: string;
+  private encryptedMessage : string;
 
   constructor(
     private userService: UserService,
     private router: Router,
     private apiService: ApiService,
     private formBuilder: FormBuilder,
-    private _EncryptionService: EncryptionService,
-    private modalService: NgbModal
+    private _EncryptionService: EncryptionService
   ) {}
 
   ngOnInit() {
@@ -49,7 +53,21 @@ export class SenderComponent implements OnInit {
 
   sendMessage() {
     this.submitted = true;
-    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value.toString());
+    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value)
+    .subscribe(
+      data => {
+        if(data["status"] == 201){
+          this.encryptedMessage = data["encryptedMessage"];
+          this.successfulSend = true;
+          this.invalidRecipient = false;
+          this.clearTextFields();
+        }
+        else if(data["status"]== 403){
+          this.invalidRecipient = true;
+        }
+      },
+      error => {
+    });
   }
 
   goToInbox(){
@@ -58,4 +76,12 @@ export class SenderComponent implements OnInit {
 
   // convenience getter for easy access to form fields
   get f() { return this.messageForm.controls }
+
+  clearTextFields(){
+    (<HTMLInputElement>document.getElementById("message")).value = "";
+    (<HTMLInputElement>document.getElementById("recipient")).value = "";
+    if((<HTMLInputElement>document.getElementById("sharedKey")) != null){
+      (<HTMLInputElement>document.getElementById("sharedKey")).value = "";
+    }
+  }
 }

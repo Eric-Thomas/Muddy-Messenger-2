@@ -1,13 +1,13 @@
 <div class="container">
   <div class="row">
-      <div class="col">
-          <h1>{{userName}}'s Inbox </h1>
-      </div>
-      <div class="col text-right">
-          <button class="btn btn-muddy send-message" type="button"(click)="goToSend()">Send Message</button>
-      </div>
-  </div>
-  <div class="table-wrapper-scroll-y my-custom-scrollbar">
+    <div class="col">
+        <h1>{{userName}}'s Inbox </h1>
+    </div>
+    <div class="col text-right">
+        <button class="btn btn-muddy send-message" type="button"(click)="goToSend()">Send Message</button>
+    </div>
+</div>
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
       <table class="table table-bordered table-striped mb-0">
         <thead>
           <tr>
@@ -21,7 +21,9 @@
             <td>{{message.time}}</td>
             <td>{{message.sender}}</td>
             <td>{{message.text}}</td>
-            <td> <input type="button" value="Open" (click)="openDialog(message.sender, message.text)"/></td>
+            <td class="open d-flex justify-content-center">
+              <button class="btn btn-muddy-secondary btn-block" type="button"  (click)="openDialog(message.sender, message.text, message.encryption)">Open</button>
+            </td>
           </tr>
         </tbody>
       </table>

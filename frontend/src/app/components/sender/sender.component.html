@@ -5,7 +5,7 @@
         <label for="message">What message do you want to Muddy up?</label>
     </div>
     <div class="col text-right">
-      <button class="btn btn-muddy inbox" type="button"(click)="goToInbox()">Inbox</button>
+      <button class="btn btn-muddy inbox" (click) = "goToInbox()"type="button">Inbox</button>
     </div>
   </div>
   
@@ -19,9 +19,12 @@
     <div class="d-flex flex-row">
       <div class="flex-fill">
         <label>Message recipient
-          <input class = "form-control" formControlName="recipient" list="users" name="users" [ngClass]="{ 'is-invalid': submitted && f.recipient.errors }"/>
+          <input class = "form-control" id="recipient" formControlName="recipient" list="users" name="users" [ngClass]="{ 'is-invalid': submitted && f.recipient.errors }"/>
           <div *ngIf="submitted && f.recipient.errors" class="invalid-feedback">
-              <div *ngIf="f.recipient.errors.required">A recipient is required</div>
+            <div *ngIf="f.recipient.errors.required">A recipient is required</div>
+          </div>
+          <div *ngIf="invalidRecipient" class="alert alert-danger" role="alert">
+            Recipient not found
           </div>
         </label>
         <datalist id="users">
@@ -30,15 +33,15 @@
       </div>
       <div class="flex-fill">
         <label>Encryption algorithm </label>
-        <select class = "form-control" formControlName = "algorithm">
+        <select id="algorithm" class = "form-control" formControlName = "algorithm">
           <option  *ngFor="let algorithm of algorithms" value="{{ algorithm }}">
             {{algorithm}}
           </option>
         </select>
         <div *ngIf = "this.f.algorithm.value != 'RSA'">
           <label>Shared Key
-            <input class = "form-control" formControlName="sharedKey" [ngClass]="{ 'is-invalid': submitted && f.sharedKey.errors }"/>
-            <div *ngIf="submitted && f.recipient.errors" class="invalid-feedback">
+            <input class = "form-control" id="sharedKey" formControlName="sharedKey" [ngClass]="{ 'is-invalid': submitted && f.sharedKey.errors }"/>
+            <div *ngIf="submitted && f.sharedKey.errors" class="invalid-feedback">
                 <div *ngIf="f.sharedKey.errors.required">A shared key is required for this algorithm</div>
             </div>
           </label>
@@ -49,8 +52,12 @@
       type="submit"
       class="btn btn-muddy btn-block"
     >
-      Submit
+    <span *ngIf = "!invalidRecipient && !f.errors && submitted && !successfulSend" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Send
     </button> 
+    <div *ngIf = "successfulSend" class="alert alert-success" role="alert">
+      Message muddied up! <br>
+      Encrypted Message: {{encryptedMessage}}
+    </div>
   </form>
 </div>
-

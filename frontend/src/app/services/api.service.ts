@@ -5,23 +5,22 @@ import {throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as cryptojs from 'crypto-js';
 import * as forge from 'node-forge';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  saltRounds = 10;
-
   constructor(private httpClient: HttpClient) {
    }
 
   login(username : String, password : String){
     let url = AppConstants.apiURL + "/authenticate/" + username;
     return this.httpClient.get(url).pipe(map(resp => {
-      if (resp["status"] == 200 && resp["password"] == this.hash(password, username)){//successful login
+      if (resp["status"] == 200 && bcrypt.compareSync(password, resp["password"])){//successful login
         return resp;
       }
-      return this.error(resp["message"]);
+      return this.error(resp["message"]); 
     }));
   }
 
@@ -49,7 +48,7 @@ export class ApiService {
       "message": encryptedMessage,
       "encryption" : algorithm
     };
-    this.httpClient.post(url, payload).subscribe();
+    return this.httpClient.post(url, payload);
   }
   getUsers() {
     let url = AppConstants.apiURL + "/users";
@@ -90,7 +89,11 @@ export class ApiService {
   }
 
   hash(plaintext : any, salt: any) {
-    return cryptojs.MD5(plaintext + salt).toString();
+    let saltValue = bcrypt.genSaltSync(10);
+    console.log(bcrypt.hashSync(plaintext, saltValue));
+    return bcrypt.hashSync(plaintext, saltValue);
+
+    //return cryptojs.PBKDF2(plaintext + salt).toString();  
   }
 
   encryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
@@ -123,13 +126,13 @@ export class ApiService {
         return plaintext;
       }
       case 'AES': {
-        return cryptojs.AES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.AES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       case 'DES': {
-        return cryptojs.DES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.DES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       case '3DES': {
-        return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString();
+        return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8);
       }
       default : {
         //TODO: Return error
