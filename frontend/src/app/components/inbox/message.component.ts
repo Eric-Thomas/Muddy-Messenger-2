@@ -12,13 +12,17 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig} from '@angula
 export class MessageDialogComponent implements OnInit{
     private message: string;
     private sender: string;
+    private encryption: string;
+    private decryptedMessage: string;
 
     constructor(
         private dialogRef: MatDialogRef<MessageDialogComponent>,
+        private apiService: ApiService,
         @Inject(MAT_DIALOG_DATA) data) {
 
         this.message = data.message;
         this.sender = data.sender;
+        this.encryption = data.encryption;
     }
 
     ngOnInit(){   
@@ -30,5 +34,10 @@ export class MessageDialogComponent implements OnInit{
 
     decrypt(){
         //TODO:
+        this.decryptedMessage = this.apiService.decryptMessage(this.message, this.encryption, "123456");
+        console.log("message: " + this.message);
+        console.log("sender: " + this.sender);
+        console.log("encryption: " + this.encryption);
+        console.log("decrypt: " + this.decryptedMessage);
     }
 }

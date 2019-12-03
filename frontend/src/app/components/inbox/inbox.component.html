@@ -22,7 +22,7 @@
             <td>{{message.sender}}</td>
             <td>{{message.text}}</td>
             <td class="open d-flex justify-content-center">
-              <button class="btn btn-muddy-secondary btn-block" type="button"  (click)="openDialog(message.sender, message.text)">Open</button>
+              <button class="btn btn-muddy-secondary btn-block" type="button"  (click)="openDialog(message.sender, message.text, message.encryption)">Open</button>
             </td>
           </tr>
         </tbody>

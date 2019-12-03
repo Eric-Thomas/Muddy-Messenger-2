@@ -119,6 +119,7 @@ export class ApiService {
         return cryptojs.DES.decrypt(plaintext, sharedKey).toString();
       }
       case '3DES': {
+        console.log("decrypt 3DS: " + cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString(cryptojs.enc.Utf8));
         return cryptojs.TripleDES.decrypt(plaintext, sharedKey).toString();
       }
       default : {
