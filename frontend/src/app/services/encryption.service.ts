@@ -4,6 +4,7 @@ import { ApiService } from "src/app/services/api.service";
 import { UserService } from "src/app/services/user.service";
 import {throwError} from 'rxjs';
 var primes = require('primes');
+import * as forge from 'node-forge';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,10 @@ export class EncryptionService {
   private _secretKey = Math.floor(Math.random()*10); //TODO: too large causes overflow
   private _secretKeyString = this._secretKey.toString();
   private _sharedSecret;
+
+  private _RSApublic
+  private _RSAprivate
+  private _serverRSAPublic
 
   constructor(
     private apiService: ApiService,
@@ -46,30 +51,38 @@ export class EncryptionService {
   }
 
   /**
-   * AES, DES, 3DES encrpytion and decryption
+   * Synchronsly generates RSA public/private keys and gets server's public key
    */
-  AESEncrypt(value : string) : string{
-    return CryptoJS.AES.encrypt(value, this._secretKeyString).toString();
+  RSAKeyGen(username) {
+    var keypair = forge.pki.rsa.generateKeyPair({bits: 2048, e: 0x10001});
+    this._RSAprivate = keypair.privateKey;
+    this._RSApublic = keypair.publicKey;
+
+    // convert a Forge public key to PEM-format
+    var pem = forge.pki.publicKeyToPem(this._RSApublic);
+
+    // TODO: send public key to server and get servers public key
+    let r = this.apiService.rsaKeyExchange(pem, username)
+    .subscribe(resp => {
+      if (resp["status"] == 200){
+        return resp;
+      }
+      return throwError(resp["message"])
+    });
   }
 
-  AESDecrypt(textToDecrypt : string){
-    return CryptoJS.AES.decrypt(textToDecrypt, this._secretKeyString).toString(CryptoJS.enc.Utf8);
+  /**
+   * Synchronsly decrypts ciphertext using the client's private key
+   */
+  RSADecrypt(ciphertext) {
+    return this._RSAprivate.decrypt(ciphertext);
   }
 
-  DESEncrypt(value : string) : string{
-    return CryptoJS.DES.encrypt(value, this._secretKeyString).toString();
-  }
-
-  DESDecrypt(textToDecrypt : string){
-    return CryptoJS.DES.decrypt(textToDecrypt, this._secretKeyString).toString(CryptoJS.enc.Utf8);
-  }
-
-  TDESEncrypt(value : string) : string{
-    return CryptoJS.TripleDES.encrypt(value, this._secretKeyString).toString();
-  }
-
-  TDESDecrypt(textToDecrypt : string){
-    return CryptoJS.TripleDES.decrypt(textToDecrypt, this._secretKeyString).toString(CryptoJS.enc.Utf8);
+  /**
+   * Synchronsly encrypts plaintext using server's public key
+   */
+  RSAEncrypt(plaintext="hello world") {
+    return this._serverRSAPublic.encrypt(plaintext);    
   }
 
 

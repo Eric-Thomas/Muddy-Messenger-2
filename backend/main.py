@@ -4,7 +4,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy import exc
 import random
-
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
 
 database.init_db()
 db_session = database.db_session
@@ -123,6 +125,39 @@ def dh_exchange():
     print('private key: '+ str(server_private_key) +'\nshared secret: '+ str(shared_secret) +'\nserver public key: ' + str(B))
     return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': B})
 
+# Does RSA Key Exchange with client
+# Client sends their public key. We return a newly generated public key
+@app.route('/rsa', methods=['POST'])
+def rsa_exchange():
+
+    # Get username
+    username = request.get_json().get('username')
+    print('user: ' + str(username))
+
+    # query user 
+    query = User.query.filter_by(user_name = username).all()
+    if not query:  # No users match in db
+        return jsonify({'status': 404, 'message':  str(username) + ' does not exist'})
+    user = query[0]
+
+    # Get client's public key TODO: store somewhere
+    c_key = request.get_json().get('client_public_key')
+    print(type(c_key))
+    print(c_key)
+    client_public_key = serialization.load_pem_public_key(
+        bytes(c_key, 'utf-8'),
+        backend=default_backend()
+    )
+
+    # Generate private key
+    server_private_key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=2048,
+        backend=default_backend()
+    )
+
+    # return our public key
+    return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': str(server_private_key.public_key())})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
