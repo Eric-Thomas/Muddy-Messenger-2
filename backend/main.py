@@ -8,6 +8,8 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 import sys
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 
 
 database.init_db()
@@ -16,8 +18,11 @@ db_session = database.db_session
 app = Flask(__name__)
 CORS(app)
 
-message_id = 0
-shared_secrets = {}
+class messages:
+    message_id = 0
+    shared_secrets = {}
+
+backend = default_backend()
 
 
 @app.route('/user', methods=['POST'])
@@ -63,7 +68,14 @@ def send():
         request_receiver = request.get_json().get('receiver')
         request_message = request.get_json().get('message')
         encryption_type = request.get_json().get('encryption')
+        message_id = request.get_json().get('ID')
         #TODO: Decrypt with shared secret
+        secret = shared_secrets[message_id]
+        cipher = Cipher(algorithms.AES(secret), modes.CBC(iv), backend=backend)
+        decryptor = cipher.decryptor()
+        print("AES decryption\n")
+        print(decryptor.update(request_message) + decryptor.finalize())
+        
         #TODO: Encrypt with DB master key
         message = Message(receiver = request_receiver, sender = request_sender, message = request_message, encryption = encryption_type)
         db_session.add(message)
@@ -128,16 +140,16 @@ def dh_exchange():
     B = g**server_private_key % n
 
     #TODO: Generate message ID and save it to dictionary
-    while(message_id in shared_secret):
-        if message_id + 1 == sys.maxsize:
-            message_id = 0
+    while(messages.message_id in messages.shared_secrets):
+        if messages.message_id + 1 == sys.maxsize:
+            messages.message_id = 0
         else:
-            message_id += 1
+            messages.message_id += 1
 
-    shared_secrets[message_id] = shared_secret
+    messages.shared_secrets[messages.message_id] = shared_secret
 
     print('private key: '+ str(server_private_key) +'\nshared secret: '+ str(shared_secret) +'\nserver public key: ' + str(B))
-    return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': B, 'ID': message_id})
+    return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': B, 'ID': messages.message_id})
 
 
 if __name__ == '__main__':

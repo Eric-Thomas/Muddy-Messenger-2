@@ -33,9 +33,10 @@ export class SenderComponent implements OnInit {
 
   ngOnInit() {
     this.userName = this.userService.getUserName();
-    if (!this.userName) {
-      this.router.navigateByUrl("");
-    }
+    // if (!this.userName) {
+    //   this.router.navigateByUrl("");
+    // }
+    this.userName = "eric";
     this.apiService.getUsers().subscribe(resp => {
       this.users = resp["users"];
     });
@@ -48,14 +49,14 @@ export class SenderComponent implements OnInit {
 
     // Gets shared private key with server
     // this._EncryptionService.dhKeyExchange(this.userName);
-    this._EncryptionService.RSAKeyGen(this.userName);
+    // this._EncryptionService.RSAKeyGen(this.userName);
   }
 
   sendMessage() {
     // let shared_secret = this._EncryptionService.dhKeyExchange(this.userName);
     this.submitted = true;
     this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value)
-    .subscribe(
+    .then(
       data => {
         if(data["status"] == 201){
           this.encryptedMessage = data["encryptedMessage"];

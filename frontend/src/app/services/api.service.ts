@@ -7,6 +7,7 @@ import * as cryptojs from 'crypto-js';
 import * as forge from 'node-forge';
 import * as bcrypt from 'bcryptjs';
 import { EncryptionService } from './encryption.service';
+var primes = require('primes');
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +43,9 @@ export class ApiService {
   }
 
   async sendMessage(sender: string, receiver: string, message: string, algorithm : string, sharedKey: string){
-    let message_info = await this.encryptionService.dhKeyExchange(sender);
+    let message_info = await this.dhKeyExchange(sender).toPromise();
     let encryptedMessage = this.encryptMessage(message, algorithm, message_info["shared secret"]);
+    console.log("encrypted message: " + encryptedMessage);
     let url = AppConstants.apiURL + "/send";
     let payload ={
       "sender": sender,
@@ -52,6 +54,7 @@ export class ApiService {
       "encryption" : algorithm,
       "ID": message_info["ID"]
     };
+    console.log("encrypted message: " + encryptedMessage);
     return this.httpClient.post(url, payload);
   }
   getUsers() {
@@ -64,12 +67,19 @@ export class ApiService {
     return this.httpClient.get(url);
   }
   
-  dhKeyExchange(publicKey: Number, g: Number, n: Number, username: String) {
+  dhKeyExchange(username: String) {
+    let secretKey = Math.floor(Math.random()*10);
+    let primeNums = primes(100);
+    let g = primeNums[Math.floor(Math.random()*primeNums.length)];
+    let n = primeNums[Math.floor(Math.random()*primeNums.length)];
+
+    // A = our public key
+    let A = Math.pow(g, secretKey) % n
     let url = AppConstants.apiURL + '/dhExchange'; 
     let payload = {
       "g": g, 
       "n": n, 
-      "client_public_key": publicKey,
+      "client_public_key": A,
       "username" : username,
     };
 
@@ -117,6 +127,7 @@ export class ApiService {
       }
       default : {
         //TODO: Return error
+        console.log("ERROR default in encrypt message api service");
         break;
       }
     }
