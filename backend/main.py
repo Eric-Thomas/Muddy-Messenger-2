@@ -71,7 +71,7 @@ def send():
 @app.route('/user/<user_name>/messages', methods=['GET'])
 def receive(user_name):
     try:
-        query = Message.query.filter(Message.receiver == user_name).all()
+        query = Message.query.filter(Message.receiver == user_name).order_by(Message.time.desc()).all()
         messages = []
         for row in query:
             time = str(row.time).split()[0]

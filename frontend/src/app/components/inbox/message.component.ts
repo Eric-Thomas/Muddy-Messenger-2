@@ -14,6 +14,7 @@ export class MessageDialogComponent implements OnInit{
     private sender: string;
     private encryption: string;
     private decryptedMessage: string;
+    private decrypted = false;
 
     constructor(
         private dialogRef: MatDialogRef<MessageDialogComponent>,
@@ -34,7 +35,8 @@ export class MessageDialogComponent implements OnInit{
 
     decrypt(){
         //TODO:
-        this.decryptedMessage = this.apiService.decryptMessage(this.message, this.encryption, "123456");
+        this.decryptedMessage = this.apiService.decryptMessage(this.message, this.encryption,'s5v8y/B?E(H+MbPeShVmYq3t6w9z$C&F');
+        this.decrypted = true;
         console.log("message: " + this.message);
         console.log("sender: " + this.sender);
         console.log("encryption: " + this.encryption);

@@ -8,9 +8,9 @@
       </div>
 </div>
 <mat-dialog-content>
-  <p>Ciphertext: {{message}}</p>
-  <p>Sent by:{{sender}}</p>
-  <p>Decrypted Message: {{decryptedMessage}}</p>
+  <p><strong>Ciphertext:</strong> {{message}}</p>
+  <p><strong>Sent by:</strong> {{sender}}</p>
+  <p *ngIf = "decrypted"><strong>Decrypted Message:</strong> {{decryptedMessage}}</p>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button class="btn btn-muddy"(click)="decrypt()">Decrypt</button>

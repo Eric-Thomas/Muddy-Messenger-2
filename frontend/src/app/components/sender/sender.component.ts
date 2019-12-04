@@ -15,7 +15,7 @@ import { first } from 'rxjs/operators';
 export class SenderComponent implements OnInit {
   private userName = "";
   private users: any;
-  private algorithms : string[] = ['RSA', 'AES', 'DES', '3DES'];
+  private algorithms : string[] = ['AES', 'DES', '3DES'];
   private messageForm : FormGroup;
   private submitted = false;
   private successfulSend = false;
@@ -43,7 +43,7 @@ export class SenderComponent implements OnInit {
       message: ['', Validators.required],
       recipient: ['', [Validators.required]],
       sharedKey: ['', [Validators.required]],
-      algorithm : ['RSA']
+      algorithm : ['AES']
     });
 
     // Gets shared private key with server
@@ -52,7 +52,8 @@ export class SenderComponent implements OnInit {
 
   sendMessage() {
     this.submitted = true;
-    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value)
+    //this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value)
+    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, 's5v8y/B?E(H+MbPeShVmYq3t6w9z$C&F')
     .subscribe(
       data => {
         if(data["status"] == 201){
