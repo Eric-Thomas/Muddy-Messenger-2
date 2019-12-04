@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppConstants } from '../app.constants';
 import { HttpClient } from '@angular/common/http';
-import {throwError} from 'rxjs';
+import {throwError, Observable, of} from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as cryptojs from 'crypto-js';
 import * as forge from 'node-forge';
@@ -43,7 +43,9 @@ export class ApiService {
   }
 
   async sendMessage(sender: string, receiver: string, message: string, algorithm : string, sharedKey: string){
-    let message_info = await this.dhKeyExchange(sender).toPromise();
+    let message_info = await this.dhKeyExchange(sender);
+    console.log("message info");
+    console.log(message_info);
     let encryptedMessage = this.encryptMessage(message, algorithm, message_info["shared secret"]);
     console.log("encrypted message: " + encryptedMessage);
     let url = AppConstants.apiURL + "/send";
@@ -67,7 +69,7 @@ export class ApiService {
     return this.httpClient.get(url);
   }
   
-  dhKeyExchange(username: String) {
+  async dhKeyExchange(username: String) {
     let secretKey = Math.floor(Math.random()*10);
     let primeNums = primes(100);
     let g = primeNums[Math.floor(Math.random()*primeNums.length)];
@@ -83,7 +85,12 @@ export class ApiService {
       "username" : username,
     };
 
-    return this.httpClient.post(url, payload)
+    let messageInfo = await this.httpClient.post(url, payload).toPromise()
+    let sharedSecret = messageInfo['public_key']**secretKey % n;
+    messageInfo['shared secret'] = sharedSecret;
+    return new Promise(resolve => {
+      resolve(messageInfo);
+    });
   }
 
   rsaKeyExchange(publicKey, username: String) {
@@ -111,6 +118,7 @@ export class ApiService {
   }
 
   encryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
+    sharedKey = sharedKey.toString();
     switch(algorithm){
       case 'RSA': {
         //TODO: Implement RSA Encryption
