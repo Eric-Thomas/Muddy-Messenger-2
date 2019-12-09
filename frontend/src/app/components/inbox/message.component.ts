@@ -35,7 +35,6 @@ export class MessageDialogComponent implements OnInit{
     }
 
     decrypt(){
-        //TODO:
         this.encryptionService.dhKeyExchange(this.sender);
         this.decryptedMessage = this.apiService.decryptMessage(this.message, this.encryption, this.encryptionService.GetSharedSecret());
         console.log("message: " + this.message);

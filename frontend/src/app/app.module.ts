@@ -11,7 +11,6 @@ import { SignupComponent } from './components/signup/signup.component';
 import { InboxComponent } from './components/inbox/inbox.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AppConstants } from './app.constants';
-import { AlertComponent } from './components/alert/alert.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MessageDialogComponent } from './components/inbox/message.component';
@@ -26,7 +25,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     HomeComponent,
     SignupComponent,
     InboxComponent,
-    AlertComponent,
     MessageDialogComponent
   ],
   imports: [
