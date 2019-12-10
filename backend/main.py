@@ -4,12 +4,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy import exc
 import random
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
+import os
 import sys
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
+import crypto
 
 
 database.init_db()
@@ -20,9 +17,11 @@ CORS(app)
 
 class messages:
     message_id = 0
-    shared_secrets = {}
-
-backend = default_backend()
+    receiver_id = 0
+    shared_secrets_send = {}
+    shared_secrets_receive = {}
+    # TODO: Change to master DB key from env variables
+    master_key = "AGH@9rb23ui#$^$"
 
 
 @app.route('/user', methods=['POST'])
@@ -69,17 +68,14 @@ def send():
         request_message = request.get_json().get('message')
         encryption_type = request.get_json().get('encryption')
         message_id = request.get_json().get('ID')
-        #TODO: Decrypt with shared secret
-        secret = shared_secrets[message_id]
-        cipher = Cipher(algorithms.AES(secret), modes.CBC(iv), backend=backend)
-        decryptor = cipher.decryptor()
-        print("AES decryption\n")
-        print(decryptor.update(request_message) + decryptor.finalize())
-        
-        #TODO: Encrypt with DB master key
-        message = Message(receiver = request_receiver, sender = request_sender, message = request_message, encryption = encryption_type)
+
+        shared_secret = messages.shared_secrets_send[message_id]
+        key = crypto.encryptAES(shared_secret, messages.master_key)
+        message = Message(receiver = request_receiver, sender = request_sender, message = request_message, encryption = encryption_type, key = key)
         db_session.add(message)
         db_session.commit()
+        # Delete shared secret from data structure
+        del messages.shared_secrets_send[message_id]
         return jsonify({'status': 201, 'message': 'Message Muddied!', 'encryptedMessage': request_message})
     except exc.IntegrityError as e:
         print(e)
@@ -87,7 +83,7 @@ def send():
         return jsonify({'status': 403, 'message': 'Foreign Key constraint failed. Make sure both users exist'})
     except Exception as e:
         print(e)
-        return jsonify({'status': 400, 'message': 'Write to db failed'})
+        return jsonify({'status': 400, 'message': 'Write to db failed', 'error': e})
 
 @app.route('/user/<user_name>/messages', methods=['GET'])
 def receive(user_name):
@@ -96,8 +92,8 @@ def receive(user_name):
         messages = []
         for row in query:
             time = str(row.time).split()[0]
-            message = {'sender': row.sender, 'text': row.message, 'time' : time, 'encryption': row.encryption}
-            #TODO: Decrypt with DB master key
+            key = crypto.decryptAES(row.key, messages.master_key)
+            message = {'sender': row.sender, 'text': row.message, 'time' : time, 'encryption': row.encryption, 'key': key}
             #TODO: Encrypt with DH shared secret
             messages.append(message)
         return jsonify({'status': 200, 'messages': messages})
@@ -115,18 +111,14 @@ def authenticate(username):
     return jsonify({'status': 200, 'user_name': user.user_name, 'password': user.password, 'public_key': user.public_key})
 
 # Does DH Key Exchange with client
-@app.route('/dhExchange', methods=['POST'])
-def dh_exchange():
+@app.route('/dhExchange/<send_or_receive>', methods=['POST'])
+def dh_exchange(send_or_receive):
 
     # Get payload
     g = request.get_json().get('g')
     n = request.get_json().get('n')
     client_public_key = request.get_json().get('client_public_key')
     username = request.get_json().get('username')
-
-    print('g: ' + str(g))
-    print('n: ' + str(n))
-    print('client public: ' + str(client_public_key))
 
     # query user 
     query = User.query.filter_by(user_name = username).all()
@@ -139,16 +131,23 @@ def dh_exchange():
 
     B = g**server_private_key % n
 
-    #TODO: Generate message ID and save it to dictionary
-    while(messages.message_id in messages.shared_secrets):
-        if messages.message_id + 1 == sys.maxsize:
-            messages.message_id = 0
-        else:
-            messages.message_id += 1
+    if send_or_receive = 'send':
+        while(messages.message_id in messages.shared_secrets_send):
+            if messages.message_id + 1 == sys.maxsize:
+                messages.message_id = 0
+            else:
+                messages.message_id += 1
 
-    messages.shared_secrets[messages.message_id] = shared_secret
+        messages.shared_secrets_send[messages.message_id] = shared_secret
 
-    print('private key: '+ str(server_private_key) +'\nshared secret: '+ str(shared_secret) +'\nserver public key: ' + str(B))
+    elif send_or_receive = 'receive':
+        while(messages.receiver_id in messages.shared_secrets_receive):
+            if messages.receiver_id + 1 == sys.maxsize:
+                messages.receiver_id = 0
+            else:
+                messages.receiver_id += 1
+        messages.shared_secrets_receive[messages.receiver_id]
+    elif send_or_receive = 'receive':
     return jsonify({'status': 200, 'user_name': user.user_name, 'public_key': B, 'ID': messages.message_id})
 
 

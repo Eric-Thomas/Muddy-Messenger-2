@@ -58,6 +58,7 @@ export class SenderComponent implements OnInit {
     this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value)
     .then(
       data => {
+        console.log(data);
         if(data["status"] == 201){
           this.encryptedMessage = data["encryptedMessage"];
           this.successfulSend = true;

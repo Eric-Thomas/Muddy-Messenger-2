@@ -43,29 +43,28 @@ export class ApiService {
   }
 
   async sendMessage(sender: string, receiver: string, message: string, algorithm : string, sharedKey: string){
-    let message_info = await this.dhKeyExchange(sender);
-    console.log("message info");
-    console.log(message_info);
-    let encryptedMessage = this.encryptMessage(message, algorithm, message_info["shared secret"]);
-    console.log("encrypted message: " + encryptedMessage);
+    let dh = await this.dhKeyExchange(sender);
+    let encryptedMessage = await this.encryptMessage(message, algorithm, dh["shared secret"]);
     let url = AppConstants.apiURL + "/send";
     let payload ={
       "sender": sender,
       "receiver": receiver,
       "message": encryptedMessage,
       "encryption" : algorithm,
-      "ID": message_info["ID"]
+      "ID": dh["ID"]
     };
-    console.log("encrypted message: " + encryptedMessage);
-    return this.httpClient.post(url, payload);
+    return this.httpClient.post(url, payload).toPromise();
   }
   getUsers() {
     let url = AppConstants.apiURL + "/users";
     return this.httpClient.get(url);
 
   }
-  getMessages(receiver: string){
+  async getMessages(receiver: string){
     let url = AppConstants.apiURL + "/user/" + receiver + "/messages";
+    let dh = await this.dhKeyExchange(receiver);
+    let 
+
     return this.httpClient.get(url);
   }
   
@@ -111,7 +110,6 @@ export class ApiService {
 
   hash(plaintext : any, salt: any) {
     let saltValue = bcrypt.genSaltSync(10);
-    console.log(bcrypt.hashSync(plaintext, saltValue));
     return bcrypt.hashSync(plaintext, saltValue);
 
     //return cryptojs.PBKDF2(plaintext + salt).toString();  
@@ -142,7 +140,7 @@ export class ApiService {
   }
 
   decryptMessage(plaintext: any, algorithm : string, sharedKey : any) {
-    //TODO: Produce key from user input
+    sharedKey = sharedKey.toString();
     switch(algorithm){
       case 'RSA': {
         //TODO: Implement RSA Decryption
