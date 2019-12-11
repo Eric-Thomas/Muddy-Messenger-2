@@ -15,7 +15,7 @@ import { first } from "rxjs/operators";
 export class SenderComponent implements OnInit {
   private userName = "";
   private users: any;
-  private algorithms: string[] = ["AES", "DES", "3DES"];
+  private algorithms: string[] = ["AES", "3DES"];
   private messageForm: FormGroup;
   private submitted = false;
   private successfulSend = false;
