@@ -128,18 +128,6 @@ export class ApiService {
     });
   }
 
-  rsaKeyExchange(publicKey, username: String) {
-    console.log("Key: " + publicKey);
-
-    let url = AppConstants.apiURL + "/rsa";
-    let payload = {
-      client_public_key: publicKey,
-      username: username
-    };
-
-    return this.httpClient.post(url, payload);
-  }
-
   error(message) {
     return throwError(message);
   }
@@ -154,15 +142,8 @@ export class ApiService {
   encryptMessage(plaintext: any, algorithm: string, sharedKey: any) {
     sharedKey = sharedKey.toString();
     switch (algorithm) {
-      case "RSA": {
-        //TODO: Implement RSA Encryption
-        return plaintext;
-      }
       case "AES": {
         return cryptojs.AES.encrypt(plaintext, sharedKey).toString();
-      }
-      case "DES": {
-        return cryptojs.DES.encrypt(plaintext, sharedKey).toString();
       }
       case "3DES": {
         return cryptojs.TripleDES.encrypt(plaintext, sharedKey).toString();
@@ -178,17 +159,8 @@ export class ApiService {
   decryptMessage(cipherText: any, algorithm: string, sharedKey: any) {
     sharedKey = sharedKey.toString();
     switch (algorithm) {
-      case "RSA": {
-        //TODO: Implement RSA Decryption
-        return cipherText;
-      }
       case "AES": {
         return cryptojs.AES.decrypt(cipherText, sharedKey).toString(
-          cryptojs.enc.Utf8
-        );
-      }
-      case "DES": {
-        return cryptojs.DES.decrypt(cipherText, sharedKey).toString(
           cryptojs.enc.Utf8
         );
       }
