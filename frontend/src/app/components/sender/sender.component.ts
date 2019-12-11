@@ -15,7 +15,7 @@ import { first } from "rxjs/operators";
 export class SenderComponent implements OnInit {
   private userName = "";
   private users: any;
-  private algorithms: string[] = ["RSA", "AES", "DES", "3DES"];
+  private algorithms: string[] = ["AES", "DES", "3DES"];
   private messageForm: FormGroup;
   private submitted = false;
   private successfulSend = false;
@@ -44,16 +44,11 @@ export class SenderComponent implements OnInit {
       message: ["", Validators.required],
       recipient: ["", [Validators.required]],
       sharedKey: ["", [Validators.required]],
-      algorithm: ["RSA"]
+      algorithm: ["AES"]
     });
-
-    // Gets shared private key with server
-    // this._EncryptionService.dhKeyExchange(this.userName);
-    // this._EncryptionService.RSAKeyGen(this.userName);
   }
 
   sendMessage() {
-    // let shared_secret = this._EncryptionService.dhKeyExchange(this.userName);
     this.submitted = true;
     this.apiService
       .sendMessage(

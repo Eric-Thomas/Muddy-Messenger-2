@@ -8,7 +8,6 @@ import {
   Validators,
   FormBuilder
 } from "@angular/forms";
-import { AlertService } from "src/app/services/alert.service";
 import { first, map } from "rxjs/operators";
 
 @Component({
@@ -25,8 +24,7 @@ export class SignupComponent implements OnInit {
     private userService: UserService,
     private apiService: ApiService,
     private router: Router,
-    private formBuilder: FormBuilder,
-    private alertService: AlertService
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
