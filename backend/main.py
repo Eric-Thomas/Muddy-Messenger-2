@@ -7,6 +7,7 @@ import random
 import os
 import sys
 import crypto
+import random
 
 
 database.init_db()
@@ -17,11 +18,12 @@ CORS(app)
 
 
 class messages:
+    if not os.getenv('DB_MASTER_KEY'):
+        os.environ['DB_MASTER_KEY'] = str(random.getrandbits(256))
     message_id = 0
     shared_secrets_send = {}
     shared_secrets_receive = {}
-    # TODO: Change to master DB key from env variables
-    master_key = "AGH@9rb23ui#$^$"
+    master_key = os.getenv('DB_MASTER_KEY')
 
 
 @app.route('/user', methods=['POST'])
