@@ -1,17 +1,18 @@
 <div class="container">
-    <div class="row">
-      <div class="col">
-          <h2 mat-dialog-title>Message</h2>
-      </div>
-      <div class="col d-flex justify-content-end">
-              <button class="btn btn-muddy-secondary"(click)="close()">Close</button>
-      </div>
+  <div class="row">
+    <div class="col">
+      <h2 mat-dialog-title>Message</h2>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <button class="btn btn-muddy-secondary" (click)="close()">Close</button>
+    </div>
+  </div>
+  <mat-dialog-content>
+    <p>Ciphertext: {{ message }}</p>
+    <p>Sent by: {{ sender }}</p>
+    <p>Decrypted Message: {{ decryptedMessage }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="btn btn-muddy" (click)="decrypt()">Decrypt</button>
+  </mat-dialog-actions>
 </div>
-<mat-dialog-content>
-  <p>Ciphertext: {{message}}</p>
-  <p>Sent by:{{sender}}</p>
-  <p>Decrypted Message: {{decryptedMessage}}</p>
-</mat-dialog-content>
-<mat-dialog-actions>
-    <button class="btn btn-muddy"(click)="decrypt()">Decrypt</button>
-</mat-dialog-actions>
