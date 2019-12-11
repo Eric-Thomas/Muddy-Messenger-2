@@ -149,8 +149,6 @@ export class ApiService {
         return cryptojs.TripleDES.encrypt(plaintext, sharedKey).toString();
       }
       default: {
-        //TODO: Return error
-        console.log("ERROR default in encrypt message api service");
         break;
       }
     }
@@ -170,7 +168,6 @@ export class ApiService {
         );
       }
       default: {
-        //TODO: Return error
         break;
       }
     }

@@ -33,7 +33,6 @@ def user():
     if not request_user_name:  # check that username isn't emtpy
         return jsonify({'status': 400, 'message': 'Invalid request syntax. Send JSON of form {user_name: XXX}'})
     try:
-        # TODO: Sanitize DB inputs
         user = User(request_user_name, request_password)
         db_session.add(user)
         db_session.commit()
@@ -138,8 +137,7 @@ def dh_exchange(send_or_receive):
         return jsonify({'status': 404, 'message':  str(username) + ' does not exist'})
     user = query[0]
 
-    server_private_key = random.randint(0, 10)  # TODO: too large overflows
-    # TODO: store shared secret somewher
+    server_private_key = random.randint(0, 10)
     shared_secret = client_public_key**server_private_key % n
 
     B = g**server_private_key % n
