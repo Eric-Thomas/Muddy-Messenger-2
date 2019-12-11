@@ -2,10 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { UserService } from "src/app/services/user.service";
 import { Router } from "@angular/router";
 import { ApiService } from "src/app/services/api.service";
-import { FormGroup, FormBuilder , Validators} from '@angular/forms';
-import { EncryptionService } from 'src/app/services/encryption.service'; 
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
-import { first } from 'rxjs/operators';
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { EncryptionService } from "src/app/services/encryption.service";
+import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
+import { first } from "rxjs/operators";
 
 @Component({
   selector: "app-sender",
@@ -15,13 +15,13 @@ import { first } from 'rxjs/operators';
 export class SenderComponent implements OnInit {
   private userName = "";
   private users: any;
-  private algorithms : string[] = ['RSA', 'AES', 'DES', '3DES'];
-  private messageForm : FormGroup;
+  private algorithms: string[] = ["RSA", "AES", "DES", "3DES"];
+  private messageForm: FormGroup;
   private submitted = false;
   private successfulSend = false;
   private invalidRecipient = false;
   private closeResult: string;
-  private encryptedMessage : string;
+  private encryptedMessage: string;
 
   constructor(
     private userService: UserService,
@@ -36,52 +36,61 @@ export class SenderComponent implements OnInit {
     if (!this.userName) {
       this.router.navigateByUrl("");
     }
+    this.userName = this.userService.getUserName();
     this.apiService.getUsers().subscribe(resp => {
       this.users = resp["users"];
     });
     this.messageForm = this.formBuilder.group({
-      message: ['', Validators.required],
-      recipient: ['', [Validators.required]],
-      sharedKey: ['', [Validators.required]],
-      algorithm : ['RSA']
+      message: ["", Validators.required],
+      recipient: ["", [Validators.required]],
+      sharedKey: ["", [Validators.required]],
+      algorithm: ["RSA"]
     });
 
     // Gets shared private key with server
     // this._EncryptionService.dhKeyExchange(this.userName);
-    this._EncryptionService.RSAKeyGen(this.userName);
+    // this._EncryptionService.RSAKeyGen(this.userName);
   }
 
   sendMessage() {
     // let shared_secret = this._EncryptionService.dhKeyExchange(this.userName);
     this.submitted = true;
-    this.apiService.sendMessage(this.userName, this.f.recipient.value, this.f.message.value, this.f.algorithm.value, this.f.sharedKey.value)
-    .subscribe(
-      data => {
-        if(data["status"] == 201){
-          this.encryptedMessage = data["encryptedMessage"];
-          this.successfulSend = true;
-          this.invalidRecipient = false;
-          this.clearTextFields();
-        }
-        else if(data["status"]== 403){
-          this.invalidRecipient = true;
-        }
-      },
-      error => {
-    });
+    this.apiService
+      .sendMessage(
+        this.userName,
+        this.f.recipient.value,
+        this.f.message.value,
+        this.f.algorithm.value,
+        this.f.sharedKey.value
+      )
+      .then(
+        data => {
+          if (data["status"] == 201) {
+            this.encryptedMessage = data["encryptedMessage"];
+            this.successfulSend = true;
+            this.invalidRecipient = false;
+            this.clearTextFields();
+          } else if (data["status"] == 403) {
+            this.invalidRecipient = true;
+          }
+        },
+        error => {}
+      );
   }
 
-  goToInbox(){
+  goToInbox() {
     this.router.navigateByUrl("/inbox");
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.messageForm.controls }
+  get f() {
+    return this.messageForm.controls;
+  }
 
-  clearTextFields(){
+  clearTextFields() {
     (<HTMLInputElement>document.getElementById("message")).value = "";
     (<HTMLInputElement>document.getElementById("recipient")).value = "";
-    if((<HTMLInputElement>document.getElementById("sharedKey")) != null){
+    if (<HTMLInputElement>document.getElementById("sharedKey") != null) {
       (<HTMLInputElement>document.getElementById("sharedKey")).value = "";
     }
   }
